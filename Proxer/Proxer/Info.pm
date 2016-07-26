@@ -38,21 +38,9 @@ use JSON;
 use Data::Dumper;
 use utf8;
 
-=head1 Name
-
-Proxer::Info
-
-=head1 Functions
-
-=cut
-
 my $_Proxer;
 
 sub new {
-    
-=head2 new
-
-=cut
 
 # Finally here's the code:
     #~ print Dumper(@_);
@@ -68,11 +56,7 @@ sub new {
 }
 
 sub GetEntry {
-=head2 GetEntry
 
-    $anime = GetEntry($id);
-
-=cut
     use HTML::Entities;
     
     my $self = shift;
@@ -84,6 +68,43 @@ sub GetEntry {
     
 }
 
+1
 
 
-1; # End of Proxer
+__DATA__
+
+Here is the Documentation:
+
+
+=head1 Name
+
+Proxer::Info
+
+=head1 Functions
+
+=head2 GetEntry
+View [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Entry)
+
+Get the main information about an anime or manga.
+
+    $anime = GetEntry($id);
+
+Returns:
+    $VAR1 = {
+        'name' => 'One Piece',
+        'state' => '2',
+        'clicks' => '22858',
+        'genre' => 'Abenteuer Action Comedy Drama Fantasy Martial-Art Mystery Shounen Superpower Violence',
+        'fsk' => 'fsk12 bad_language violence',
+        'rate_sum' => '82413',
+        'rate_count' => '8851',
+        'medium' => 'animeseries',
+        'count' => '800',
+        'description' => "Wir schreiben [...] der Piraten!\n(Quelle: Kaz\x{e9})",
+        'license' => '2',
+        'id' => '53',
+        'kat' => 'anime'
+    };
+=cut
+
+

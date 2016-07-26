@@ -175,3 +175,36 @@ sub error {
 }
 
 1; # End of Proxer
+
+
+__DATA__
+
+DOCUMENTATION:
+
+
+=head1 Name
+
+Module for interaction with proxer.me;
+
+=head1 Synopsis
+
+todo: Synopsis 
+
+=head1 Functions
+
+=head2 new
+
+Create a proxer object
+
+    my $prxr = Proxer->new(key => $api_key);
+    
+If you want to load the API-key from a file:
+
+    my $prxr = Proxer->new(keyfile => 'path/to/api.key');
+    
+You also can load the key from a remote location using http or ftp:
+
+    # NOT SUPPORTED YET!
+    #my $prxr = Proxer->new(keylocation => 'http://keys.proxer.me/mykey');
+
+=cut
