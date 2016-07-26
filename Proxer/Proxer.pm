@@ -40,6 +40,7 @@ use Data::Dumper;
 use JSON::XS;
 use lib 'Proxer';
 use Proxer::Info;
+use HTML::Entities;
 
 =head1 Name
 
@@ -136,8 +137,28 @@ sub _api_access {
     if($http_res->is_error()) {
         die $!;
     } else {
-        return decode_json($http_res->decoded_content);
+        my $api = decode_json($http_res->decoded_content);
+        
+        if($api->{error} != 0) {
+            error("API-err: ".$api->{message});
+            return undef;
+        }
+        else {
+            my $data = exists $api->{data} ? $api->{data} : undef;
+            
+            unless($data) {
+                error("Proxer did");
+                return undef;
+            }
+            else {
+                return $data;
+            }
+        }
     }
+}
+
+sub _html_decode {
+    
 }
 
 

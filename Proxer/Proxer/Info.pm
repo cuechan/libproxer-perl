@@ -36,6 +36,7 @@ our $VERSION = '0.01';
 
 use JSON;
 use Data::Dumper;
+use utf8;
 
 =head1 Name
 
@@ -72,12 +73,15 @@ sub GetEntry {
     $anime = GetEntry($id);
 
 =cut
+    use HTML::Entities;
     
     my $self = shift;
     my $id   = shift;
     my $url  = "https://proxer.me/api/v1/info/entry";
     
-    my $res = $self->{Proxer}->_api_access($url, {id => $id});
+    my $data = $self->{Proxer}->_api_access($url, {id => $id});
+    return $data;
+    
 }
 
 
