@@ -24,4 +24,4 @@ You also can load the key from a remote location using http or ftp:
 ```Perl
     # NOT SUPPORTED YET!
     #my $prxr = Proxer->new(keylocation => 'http://keys.proxer.me/mykey');
-```Perl
+```
