@@ -40,52 +40,23 @@ use Data::Dumper;
 use JSON::XS;
 use lib 'Proxer';
 use Proxer::Info;
-use HTML::Entities;
+use Proxer::Notifications;
+use Proxer::User;
 
-=head1 Name
-
-Module for interaction with proxer.me;
-
-=head1 Synopsis
-
-todo: Synopsis 
-
-=cut
-
-=head1 Functions
-
-=cut
 
 my $_Proxer;
 
 sub new {
-    
-=head2 new
-
-Create a proxer object
-
-    my $prxr = Proxer->new(key => $api_key);
-    
-If you want to load the API-key from a file:
-
-    my $prxr = Proxer->new(keyfile => 'path/to/api.key');
-    
-You also can load the key from a remote location using http or ftp:
-
-    # NOT SUPPORTED YET!
-    #my $prxr = Proxer->new(keylocation => 'http://keys.proxer.me/mykey');
-
-=cut
 
 # Finally here's the code:
     my $self = shift;
     my $opt  = {@_};
     my $proxer;
-    
+    my $api_key;
     
     
     if($opt->{key}) {
-        $proxer->{API_KEY} = $opt->{key};
+        $api_key = $opt->{key};
     }
     elsif($opt->{keyfile}) {
         open(FH, '<', $opt->{keyfile}) or die $!;
@@ -93,14 +64,12 @@ You also can load the key from a remote location using http or ftp:
         close(FH);
         chop($key);
         
-        $proxer->{API_KEY} = $key;
+        $api_key = $key;
     }
     else {
         error("No key defined");
         return undef;
     }
-    
-    error();
     
     my $lwp;
     if($opt->{UserAgent}) {
@@ -114,9 +83,18 @@ You also can load the key from a remote location using http or ftp:
         $lwp->timeout(30);    # set timeout to 30 seconds
     }
     
-    return bless({LWP => $lwp, Proxer => $proxer}, $self);
+    $proxer = {
+        API_KEY => $api_key,
+        LWP => $lwp,
+    };
+    
+    return bless($proxer, $self);
 }
 
+
+##################
+# MAIN FUNCTIONS #
+##################
 
 sub Info {
     my $self = shift;
@@ -125,12 +103,30 @@ sub Info {
     return Proxer::Info->new($self);
 }
 
+sub Notifications {
+    my $self = shift;
+    my $opt = {@_};
+    
+    return Proxer::Notifications->new($self);
+}
+
+sub User {
+    my $self = shift;
+    my $opt = {@_};
+    
+    return Proxer::User->new($self);
+}
+
+
+#####################
+# PRIVATE FUNCTIONS #
+#####################
 
 sub _api_access {
     my $self = shift;
     my ($url, $params) = @_;
     
-    $params->{api_key} = $self->{Proxer}->{API_KEY};
+    $params->{api_key} = $self->{API_KEY};
     
     my $http_res = $self->{LWP}->post($url, $params);
     
@@ -141,18 +137,10 @@ sub _api_access {
         
         if($api->{error} != 0) {
             error("API-err: ".$api->{message});
-            return undef;
+            return $api;
         }
         else {
-            my $data = exists $api->{data} ? $api->{data} : undef;
-            
-            unless($data) {
-                error("Proxer did");
-                return undef;
-            }
-            else {
-                return $data;
-            }
+            return $api;
         }
     }
 }
@@ -163,15 +151,8 @@ sub _html_decode {
 
 
 sub error {
-    my ($package, $file, $line) = caller();
-    
-    if($package ne __PACKAGE__) {
-        my $self = shift;
-        return $self->{LAST_ERROR};
-    }
-    else {
-        $_Proxer->{LAST_ERROR} = @_;
-    }
+    my $self = shift;
+    $_Proxer->{LAST_ERROR} = @_;
 }
 
 1; # End of Proxer

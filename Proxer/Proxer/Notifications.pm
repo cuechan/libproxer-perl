@@ -27,7 +27,7 @@
 #
 #*************************************************************
 
-package Proxer::Info;
+package Proxer::Notifications;
 
 use 5.006;
 use strict;
@@ -55,23 +55,16 @@ sub new {
     return bless({Proxer => $opt}, $self);
 }
 
-sub GetEntry {
+sub GetNews {
     my $self = shift;
     my $Proxer = $self->{Proxer};
-    my $id   = shift;
-    my $url  = "https://proxer.me/api/v1/info/entry";
     
-    my $data = $Proxer->_api_access($url, {id => $id});
+    my $url  = "https://proxer.me/api/v1/notifications/news";
+    
+    my $data = $Proxer->_api_access($url, undef);
     return $data;
-    
 }
 
-sub GetNames {
-    my $self = shift;
-    my $proxer  = $self->{Proxer};
-    
-    my $url = "https://proxer.me/api/v1/info/entry";
-}
 
 1
 

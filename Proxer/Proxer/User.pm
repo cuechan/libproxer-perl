@@ -27,7 +27,7 @@
 #
 #*************************************************************
 
-package Proxer::Info;
+package Proxer::User;
 
 use 5.006;
 use strict;
@@ -55,23 +55,18 @@ sub new {
     return bless({Proxer => $opt}, $self);
 }
 
-sub GetEntry {
+sub Login {
     my $self = shift;
     my $Proxer = $self->{Proxer};
-    my $id   = shift;
-    my $url  = "https://proxer.me/api/v1/info/entry";
     
-    my $data = $Proxer->_api_access($url, {id => $id});
+    my ($login, $password) = @_;
+    
+    my $url  = "https://proxer.me/api/v1/user/login";
+    
+    my $data = $Proxer->_api_access($url, {username => $login, password => $password});
     return $data;
-    
 }
 
-sub GetNames {
-    my $self = shift;
-    my $proxer  = $self->{Proxer};
-    
-    my $url = "https://proxer.me/api/v1/info/entry";
-}
 
 1
 
