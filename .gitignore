@@ -1,0 +1,3 @@
+*dev.pl # ignore files for local testing
+*.key   # ignore files that probably containing api-keys
+dev/
