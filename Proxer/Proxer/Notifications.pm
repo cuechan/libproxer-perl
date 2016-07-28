@@ -61,8 +61,16 @@ sub GetNews {
     
     my $url  = "https://proxer.me/api/v1/notifications/news";
     
-    my $data = $Proxer->_api_access($url, undef);
-    return $data;
+    my $api = $Proxer->_api_access($url, undef);
+    
+    if($api->{error} != 0) {
+        return undef;
+    }
+    else {
+        my @news = @{$api->{data}};
+        
+        return @news;
+    }
 }
 
 

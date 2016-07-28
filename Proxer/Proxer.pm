@@ -131,17 +131,15 @@ sub _api_access {
     my $http_res = $self->{LWP}->post($url, $params);
     
     if($http_res->is_error()) {
-        die $!;
+        seterror("HTTP err. ". $http_res->status_line);
+        return undef;
     } else {
         my $api = decode_json($http_res->decoded_content);
         
         if($api->{error} != 0) {
-            error("API-err: ".$api->{message});
-            return $api;
+            seterror("API-err: ".$api->{message});
         }
-        else {
-            return $api;
-        }
+        return $api ? $api : undef;
     }
 }
 
@@ -149,10 +147,15 @@ sub _html_decode {
     
 }
 
-
+sub seterror {
+    foreach(@_) {
+        $_Proxer->{LAST_ERROR} .= $_;
+    }
+}
 sub error {
     my $self = shift;
-    $_Proxer->{LAST_ERROR} = @_;
+    return $_Proxer->{LAST_ERROR};
+    
 }
 
 1; # End of Proxer
