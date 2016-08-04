@@ -164,26 +164,26 @@ Returns:
 
 Todo...
 
-L<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Names|Proxer Wiki>
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Names>
 
 =head2 GetGate
 
 Todo...
-l<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Gate|Proxer Wiki>
+l<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Gate>
 
 =head2 GetLang
 
 Todo...
-l<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Lang|Proxer Wiki>
+l<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Lang>
 
 =head2 GetSeason
 
 Todo...
-l<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Season|Proxer Wiki>
+l<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Season>
 
 =head2 GetGroups
 
 Todo...
-l<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Groups|Proxer Wiki>
+l<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Groups>
 
 =cut
