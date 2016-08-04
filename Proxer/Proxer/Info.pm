@@ -63,7 +63,6 @@ sub GetEntry {
     
     my $data = $Proxer->_api_access($api_class, {id => $id});
     return $data;
-    
 }
 
 sub GetNames {
@@ -71,6 +70,50 @@ sub GetNames {
     my $Proxer  = $self->{Proxer};
     my $id = shift;
     my $api_class = "info/names";
+    
+    my $data = $Proxer->_api_access($api_class, {id => $id});
+    
+    return $data;
+}
+
+sub GetGate {
+    my $self = shift;
+    my $Proxer  = $self->{Proxer};
+    my $id = shift;
+    my $api_class = "info/gate";
+    
+    my $data = $Proxer->_api_access($api_class, {id => $id});
+    
+    return $data;
+}
+
+sub GetLang {
+    my $self = shift;
+    my $Proxer  = $self->{Proxer};
+    my $id = shift;
+    my $api_class = "info/lang";
+    
+    my $data = $Proxer->_api_access($api_class, {id => $id});
+    
+    return $data;
+}
+
+sub GetSeason {
+    my $self = shift;
+    my $Proxer  = $self->{Proxer};
+    my $id = shift;
+    my $api_class = "info/season";
+    
+    my $data = $Proxer->_api_access($api_class, {id => $id});
+    
+    return $data;
+}
+
+sub GetGroups {
+    my $self = shift;
+    my $Proxer  = $self->{Proxer};
+    my $id = shift;
+    my $api_class = "info/groups";
     
     my $data = $Proxer->_api_access($api_class, {id => $id});
     
@@ -115,4 +158,30 @@ Returns:
         'id' => '53',
         'kat' => 'anime'
     };
+
+=head2 GetNames
+
+Todo...
+L<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Names|Proxer Wiki>
+
+=head2 GetGate
+
+Todo...
+l<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Gate|Proxer Wiki>
+
+=head2 GetLang
+
+Todo...
+l<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Lang|Proxer Wiki>
+
+=head2 GetSeason
+
+Todo...
+l<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Season|Proxer Wiki>
+
+=head2 GetGroups
+
+Todo...
+l<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Groups|Proxer Wiki>
+
 =cut
