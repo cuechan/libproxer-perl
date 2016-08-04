@@ -6,7 +6,7 @@ Proxer::Info
 
 ## GetEntry
 
-View \[Proxer Wiki\](http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Entry)
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Get_Entry)
 
 Get the main information about an anime or manga.
 
@@ -33,32 +33,25 @@ Returns:
 ## GetNames
 
 Todo...
-[http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Names](https://metacpan.org/pod/Proxer&#x20;Wiki)
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Names)
 
 ## GetGate
 
 Todo...
-l&lt;http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Gate|Proxer Wiki>
+l<Proxer Wiki|http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Gate>
 
 ## GetLang
 
 Todo...
-l&lt;http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Lang|Proxer Wiki>
+l<Proxer Wiki|http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Lang>
 
 ## GetSeason
 
 Todo...
-l&lt;http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Season|Proxer Wiki>
+l<Proxer Wiki|http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Season>
 
 ## GetGroups
 
 Todo...
-l&lt;http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Groups|Proxer Wiki>
-
-# POD ERRORS
-
-Hey! **The above document had some coding errors, which are explained below:**
-
-- Around line 165:
-
-    alternative text 'http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Names' contains non-escaped | or /
+l<Proxer Wiki|http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Groups>

@@ -136,7 +136,7 @@ Proxer::Info
 
 =head2 GetEntry
 
-View [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Entry)
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Get_Entry>
 
 Get the main information about an anime or manga.
 
