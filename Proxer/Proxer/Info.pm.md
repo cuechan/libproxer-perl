@@ -32,26 +32,46 @@ Returns:
 
 ## GetNames
 
-Todo...
+Todo... 
+
+    $prxrinfo->GetNames($id);
 
 [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Names)
 
 ## GetGate
 
 Todo...
-l<Proxer Wiki|http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Gate>
+
+    $prxrinfo->GetGate($id);
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Gate)
 
 ## GetLang
 
 Todo...
-l<Proxer Wiki|http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Lang>
+
+    $prxrinfo->GetLang($id);
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Lang)
 
 ## GetSeason
 
 Todo...
-l<Proxer Wiki|http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Season>
+
+    $prxrinfo->GetSeason($id);
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Season)
 
 ## GetGroups
 
 Todo...
-l<Proxer Wiki|http://proxer.me/wiki/Proxer\_API/v1/Info#Get\_Groups>
+
+    $prxrinfo->GetGroups($id);
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Groups)
+
+## GetListinfo
+
+    $prxrinfo->GetListinfo($id, $page, $limit);
+
+More at [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Listinfo)

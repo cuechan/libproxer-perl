@@ -120,6 +120,49 @@ sub GetGroups {
     return $data;
 }
 
+sub GetPublisher {
+    my $self = shift;
+    my $Proxer  = $self->{Proxer};
+    my $id = shift;
+    my $api_class = "info/publisher";
+    
+    my $data = $Proxer->_api_access($api_class, {id => $id});
+    
+    return $data;
+}
+
+sub GetListinfo {
+    my $self = shift;
+    my $Proxer  = $self->{Proxer};
+    my $api_class = "info/listinfo";
+    
+    # Todo: Workaround for just getting the number of entries and more magic in background
+    # This maybe be an global function in Proxer
+    
+    my $id = shift;
+    my $page = shift;
+    my $limit = shift;
+    
+    my $post = {id => $id};
+    $post->{p} = $page if $page;
+    $post->{limit} = $limit if $limit;
+    
+    my $data = $Proxer->_api_access($api_class, {id => $id, });
+    
+    return $data;
+}
+
+sub GetComments {
+    my $self = shift;
+    my $Proxer  = $self->{Proxer};
+    my $id = shift;
+    my $api_class = "info/publisher";
+    
+    my $data = $Proxer->_api_access($api_class, {id => $id});
+    
+    return $data;
+}
+
 1
 
 
@@ -162,28 +205,48 @@ Returns:
 
 =head2 GetNames
 
-Todo...
+Todo... 
+
+    $prxrinfo->GetNames($id);
 
 L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Names>
 
 =head2 GetGate
 
 Todo...
-l<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Gate>
+
+    $prxrinfo->GetGate($id);
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Gate>
 
 =head2 GetLang
 
 Todo...
-l<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Lang>
+
+    $prxrinfo->GetLang($id);
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Lang>
 
 =head2 GetSeason
 
 Todo...
-l<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Season>
+
+    $prxrinfo->GetSeason($id);
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Season>
 
 =head2 GetGroups
 
 Todo...
-l<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Groups>
+
+    $prxrinfo->GetGroups($id);
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Groups>
+
+=head2 GetListinfo
+
+    $prxrinfo->GetListinfo($id, $page, $limit);
+
+More at L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/Info#Get_Listinfo>
 
 =cut

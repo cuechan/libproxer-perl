@@ -155,6 +155,15 @@ sub _api_access {
 
 # todo: postprocess function
 
+sub page {
+    my $self = shift;
+    my $total = shift;
+    
+    
+    
+    
+}
+
 
 sub seterror {
     foreach(@_) {
