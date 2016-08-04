@@ -143,6 +143,7 @@ Get the main information about an anime or manga.
     $anime = GetEntry($id);
 
 Returns:
+
     $VAR1 = {
         'name' => 'One Piece',
         'state' => '2',
@@ -162,6 +163,7 @@ Returns:
 =head2 GetNames
 
 Todo...
+
 L<http://proxer.me/wiki/Proxer_API/v1/Info#Get_Names|Proxer Wiki>
 
 =head2 GetGate
