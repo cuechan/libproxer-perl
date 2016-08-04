@@ -59,18 +59,22 @@ sub GetEntry {
     my $self = shift;
     my $Proxer = $self->{Proxer};
     my $id   = shift;
-    my $url  = "https://proxer.me/api/v1/info/entry";
+    my $api_class  = "info/entry";
     
-    my $data = $Proxer->_api_access($url, {id => $id});
+    my $data = $Proxer->_api_access($api_class, {id => $id});
     return $data;
     
 }
 
 sub GetNames {
     my $self = shift;
-    my $proxer  = $self->{Proxer};
+    my $Proxer  = $self->{Proxer};
+    my $id = shift;
+    my $api_class = "info/names";
     
-    my $url = "https://proxer.me/api/v1/info/entry";
+    my $data = $Proxer->_api_access($api_class, {id => $id});
+    
+    return $data;
 }
 
 1
@@ -112,5 +116,3 @@ Returns:
         'kat' => 'anime'
     };
 =cut
-
-

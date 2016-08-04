@@ -82,6 +82,7 @@ sub new {
     }
     
     $proxer = {
+        BASE_URI => "https://proxer.me/api/v1/",
         API_KEY => $api_key,
         LWP => $lwp,
     };
@@ -126,11 +127,18 @@ sub User {
 
 sub _api_access {
     my $self = shift;
-    my ($url, $params) = @_;
+    my ($api_class, $params) = @_;
     
+    my $uri = $self->{BASE_URI}.$api_class;
     $params->{api_key} = $self->{API_KEY};
     
-    my $http_res = $self->{LWP}->post($url, $params);
+    my $http_res = $self->{LWP}->post($uri, $params);
+    
+    
+    
+    ##
+    # Access the API
+    ##
     
     if($http_res->is_error()) {
         seterror("HTTP err. ". $http_res->status_line);
@@ -145,15 +153,12 @@ sub _api_access {
     }
 }
 
-sub _html_decode {
-    
-}
-
 sub seterror {
     foreach(@_) {
         $_Proxer->{LAST_ERROR} .= $_;
     }
 }
+
 sub error {
     my $self = shift;
     return $_Proxer->{LAST_ERROR} ? $_Proxer->{LAST_ERROR} : "no error occured";

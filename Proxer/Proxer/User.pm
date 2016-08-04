@@ -61,7 +61,7 @@ sub Login {
     
     my ($login, $password) = @_;
     
-    my $url  = "https://proxer.me/api/v1/user/login";
+    my $url  = "user/login";
     
     my $data = $Proxer->_api_access($url, {username => $login, password => $password});
     return $data;
@@ -107,5 +107,3 @@ Returns:
         'kat' => 'anime'
     };
 =cut
-
-

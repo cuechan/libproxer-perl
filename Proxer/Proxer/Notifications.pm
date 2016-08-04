@@ -63,7 +63,7 @@ sub GetNews {
     # todo: get n news in an array
     
     
-    my $url  = "https://proxer.me/api/v1/notifications/news";
+    my $url  = "notifications/news";
     
     my $api = $Proxer->_api_access($url, undef);
     
