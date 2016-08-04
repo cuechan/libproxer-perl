@@ -55,9 +55,13 @@ sub new {
     return bless({Proxer => $opt}, $self);
 }
 
+
 sub GetNews {
     my $self = shift;
     my $Proxer = $self->{Proxer};
+    
+    # todo: get n news in an array
+    
     
     my $url  = "https://proxer.me/api/v1/notifications/news";
     
@@ -75,6 +79,20 @@ sub GetNews {
 
 
 1
+
+__END__
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 __DATA__
@@ -113,5 +131,3 @@ Returns:
         'kat' => 'anime'
     };
 =cut
-
-

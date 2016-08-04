@@ -32,7 +32,7 @@ package Proxer;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = '0.01';
+our $VERSION = 0.01;
 
 use LWP;
 use LWP::UserAgent;
@@ -47,8 +47,6 @@ use Proxer::User;
 my $_Proxer;
 
 sub new {
-
-# Finally here's the code:
     my $self = shift;
     my $opt  = {@_};
     my $proxer;
@@ -59,7 +57,7 @@ sub new {
         $api_key = $opt->{key};
     }
     elsif($opt->{keyfile}) {
-        open(FH, '<', $opt->{keyfile}) or die $!;
+        open(FH, '<', $opt->{keyfile}) or die "keyfile: $opt->{keyfile} not found on disk";
         my $key = <FH>;
         close(FH);
         chop($key);
@@ -67,7 +65,7 @@ sub new {
         $api_key = $key;
     }
     else {
-        error("No key defined");
+        die("No key defined");
         return undef;
     }
     
@@ -90,6 +88,10 @@ sub new {
     
     return bless($proxer, $self);
 }
+
+
+
+
 
 
 ##################
@@ -154,7 +156,7 @@ sub seterror {
 }
 sub error {
     my $self = shift;
-    return $_Proxer->{LAST_ERROR};
+    return $_Proxer->{LAST_ERROR} ? $_Proxer->{LAST_ERROR} : "no error occured";
     
 }
 
