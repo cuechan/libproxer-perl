@@ -28,6 +28,9 @@
 #*************************************************************
 
 package Proxer::Info;
+use lib '..';
+#~ use Proxer;
+
 
 use 5.006;
 use strict;
@@ -41,18 +44,25 @@ use utf8;
 my $_Proxer;
 
 sub new {
-
-# Finally here's the code:
-    #~ print Dumper(@_);
-    #~ exit;
-    #
-    # We need to return a blessed reference to our main packahe (Proxer) 
-    # for using the functions in it. Especially the LWP object and the _api_connect function.
-    
     my $self = shift;
-    my $opt  = shift;
+    my %opt = @_;
     
-    return bless({Proxer => $opt}, $self);
+    if($opt{_intern}) {
+        my $proxer = $opt{_intern};
+        warn "Indirect call" if $ENV{DEBUG};
+        
+        $proxer->{$self} = bless({'FOO' => 'DUMMY'}, $self);
+        
+        return bless($proxer, $self);
+    }
+    else {
+        warn "Direct call" if $ENV{DEBUG};;
+        
+        require Proxer;
+        my $prxr = Proxer->new(@_);
+        return $prxr->info();
+        return 1;
+    }
 }
 
 sub GetEntry {

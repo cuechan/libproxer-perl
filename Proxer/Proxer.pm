@@ -87,7 +87,7 @@ sub new {
         LWP => $lwp,
     };
     
-    return bless($proxer, $self);
+    return bless({$self => bless($proxer, $self)}, $self);
 }
 
 
@@ -99,25 +99,25 @@ sub new {
 # MAIN FUNCTIONS #
 ##################
 
-sub Info {
+sub info {
     my $self = shift;
     my $opt = {@_};
     
-    return Proxer::Info->new($self);
+    return Proxer::Info->new(_intern => $self);
 }
 
-sub Notifications {
+sub notifications {
     my $self = shift;
     my $opt = {@_};
     
-    return Proxer::Notifications->new($self);
+    return Proxer::Notifications->new(Proxer => $self);
 }
 
-sub User {
+sub user {
     my $self = shift;
     my $opt = {@_};
     
-    return Proxer::User->new($self);
+    return Proxer::User->new(Proxer => $self);
 }
 
 
@@ -127,6 +127,7 @@ sub User {
 
 sub _api_access {
     my $self = shift;
+    
     my ($api_class, $params) = @_;
     
     my $uri = $self->{BASE_URI}.$api_class;
