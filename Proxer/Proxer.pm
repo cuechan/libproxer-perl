@@ -26,6 +26,16 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 #*************************************************************
+#
+# +--------------+
+# |              |
+# |     TODO     |
+# |              |
+# +--------------+
+#
+# Todo: Function for postprocessing api answers
+# Todo: A lot of other stuff
+
 
 package Proxer;
 
@@ -34,6 +44,7 @@ use strict;
 use warnings;
 our $VERSION = 0.01;
 
+use Carp;
 use LWP;
 use LWP::UserAgent;
 use Data::Dumper;
@@ -65,7 +76,7 @@ sub new {
         $api_key = $key;
     }
     else {
-        die("No key defined");
+        croak("No key defined");
         return undef;
     }
     
@@ -78,7 +89,7 @@ sub new {
         
         $lwp->agent("libproxer2-perl/v$VERSION ($^O; perlv$]))");
         $lwp->cookie_jar({}); # use temporary cookie jar
-        $lwp->timeout(30);    # set timeout to 30 seconds
+        $lwp->timeout(5);    # set timeout to 30 seconds
     }
     
     $proxer = {
@@ -87,7 +98,7 @@ sub new {
         LWP => $lwp,
     };
     
-    return bless({$self => bless($proxer, $self)}, $self);
+    return bless($proxer, $self);
 }
 
 
@@ -130,6 +141,9 @@ sub _api_access {
     
     my ($api_class, $params) = @_;
     
+    carp "API-CLASS: $api_class";
+    carp "PARAMS: ".Dumper($params);
+    
     my $uri = $self->{BASE_URI}.$api_class;
     $params->{api_key} = $self->{API_KEY};
     
@@ -142,13 +156,13 @@ sub _api_access {
     ##
     
     if($http_res->is_error()) {
-        seterror("HTTP err. ". $http_res->status_line);
+        $self->_seterror("HTTP err. ". $http_res->status_line);
         return undef;
     } else {
         my $api = decode_json($http_res->decoded_content);
         
         if($api->{error} != 0) {
-            seterror("API-err: ".$api->{message});
+            $self->("API-err: ".$api->{message});
         }
         return $api ? $api : undef;
     }
@@ -160,21 +174,24 @@ sub page {
     my $self = shift;
     my $total = shift;
     
-    
-    
-    
+    # todo: More Magic
 }
 
 
-sub seterror {
+sub _seterror {
+    my $self = shift;
+    my $message;
     foreach(@_) {
-        $_Proxer->{LAST_ERROR} .= $_;
+        $message .= $_;
     }
+    
+    $self->{LAST_ERROR} = $message;
+    return 1;
 }
 
 sub error {
     my $self = shift;
-    return $_Proxer->{LAST_ERROR} ? $_Proxer->{LAST_ERROR} : "no error occured";
+    return $self->{LAST_ERROR} ? $self->{LAST_ERROR} : "undefined error";
     
 }
 

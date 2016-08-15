@@ -37,26 +37,35 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 
+use Carp;
 use JSON;
 use Data::Dumper;
 use utf8;
 
-my $_Proxer;
 
 sub new {
     my $self = shift;
     my %opt = @_;
     
     if($opt{_intern}) {
-        my $proxer = $opt{_intern};
-        warn "Indirect call" if $ENV{DEBUG};
+        my $prxr_info;
+        carp "Indirect call" if $ENV{DEBUG};
         
-        $proxer->{$self} = bless({'FOO' => 'DUMMY'}, $self);
+        $prxr_info->{Proxer} = $opt{_intern};
+        $prxr_info->{Data} = 'DUMMY';
+        $prxr_info->{'Some other data'} = {
+            Foo => 'Bar',
+            baz => [
+                1,
+                2,
+                3,
+            ],
+        };
         
-        return bless($proxer, $self);
+        return bless($prxr_info, $self);
     }
     else {
-        warn "Direct call" if $ENV{DEBUG};;
+        carp "Direct call" if $ENV{DEBUG};;
         
         require Proxer;
         my $prxr = Proxer->new(@_);
@@ -64,6 +73,31 @@ sub new {
         return 1;
     }
 }
+
+############################
+#                          #
+#     Standard Methods     #
+#                          #
+############################
+
+sub _seterror {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    
+    
+    $Proxer->_seterror(@_);
+    
+    return @_;
+}
+
+sub error {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    
+    return $Proxer->error(@_);
+}
+
+
 
 sub GetEntry {
     my $self = shift;
@@ -157,7 +191,7 @@ sub GetListinfo {
     $post->{p} = $page if $page;
     $post->{limit} = $limit if $limit;
     
-    my $data = $Proxer->_api_access($api_class, {id => $id, });
+    my $data = $Proxer->_api_access($api_class, $post);
     
     return $data;
 }
@@ -166,9 +200,56 @@ sub GetComments {
     my $self = shift;
     my $Proxer  = $self->{Proxer};
     my $id = shift;
-    my $api_class = "info/publisher";
+    my $api_class = "info/comments";
     
     my $data = $Proxer->_api_access($api_class, {id => $id});
+    
+    return $data;
+}
+
+sub GetRelations {
+    my $self = shift;
+    my $Proxer  = $self->{Proxer};
+    my $api_class = "info/relations";
+    
+    
+    # Todo: Magic
+    
+    my $id = shift;
+    my $page = shift;
+    my $limit = shift;
+    
+    my $post;
+    $post->{id} = $id;
+    $post->{p} = $page if $page;
+    $post->{limit} = $limit if $limit;
+    
+    my $data = $Proxer->_api_access($api_class, $post);
+    
+    return $data;
+}
+
+sub GetEntryTags {
+    my $self = shift;
+    my $Proxer  = $self->{Proxer};
+    my $id = shift;
+    my $api_class = "info/entrytags";
+    
+    my $data = $Proxer->_api_access($api_class, {id => $id});
+    
+    return $data;
+}
+
+sub SetUserinfo {
+    my $self = shift;
+    my $Proxer  = $self->{Proxer};
+    my $id = shift;
+    my $api_class = "info/setuserinfo";
+    
+    my $list = shift; # note | favor | finish
+    
+    
+    my $data = $Proxer->_api_access($api_class, {id => $id, type => $list});
     
     return $data;
 }
