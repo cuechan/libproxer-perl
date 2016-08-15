@@ -34,6 +34,7 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 
+use Carp;
 use JSON;
 use Data::Dumper;
 use utf8;
@@ -41,59 +42,80 @@ use utf8;
 my $_Proxer;
 
 sub new {
-
-# Finally here's the code:
-    #~ print Dumper(@_);
-    #~ exit;
-    #
-    # We need to return a blessed reference to our main packahe (Proxer) 
-    # for using the functions in it. Especially the LWP object and the _api_connect function.
-    
     my $self = shift;
-    my $opt  = shift;
+    my %opt = @_;
     
-    return bless({Proxer => $opt}, $self);
+    carp "Proxer::Notifications Constructor called" if $ENV{DEBUG};
+    
+    if($opt{_intern}) {
+        my $prxr_notify;
+        
+        $prxr_notify->{Proxer} = $opt{_intern};
+        $prxr_notify->{Data} = 'DUMMY';
+        
+        return bless($prxr_notify, $self);
+    }
+    else {
+        require Proxer;
+        
+        my $prxr = Proxer->new(%opt);
+        return $prxr->notifications();
+    }
 }
 
+sub error {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    
+    return $Proxer->error(@_);
+}
+
+
+sub GetCount {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    my $api_class  = "notifications/count";
+    
+    my $res = $Proxer->_api_access($api_class, undef);
+    
+    return $res;
+}
 
 sub GetNews {
     my $self = shift;
     my $Proxer = $self->{Proxer};
+    my $api_class  = "notifications/news";
     
-    # todo: get n news in an array
+    my $api = $Proxer->_api_access($api_class, undef);
+    return $api;
     
     
-    my $url  = "notifications/news";
+    #~ if($api->{error} != 0) {
+        #~ return undef;
+    #~ }
+    #~ else {
+        #~ my @news = @{$api->{data}};
+        #~ return @news;
+    #~ }
+}
+
+sub Delete {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    my $id = shift;
+    my $api_class = 'notifications/delete';
     
-    my $api = $Proxer->_api_access($url, undef);
+    my $data = $Proxer->_api_access($api_class, $id);
+    return $data;
     
-    if($api->{error} != 0) {
-        return undef;
-    }
-    else {
-        my @news = @{$api->{data}};
-        
-        return @news;
-    }
+    carp "not implemented yet";
+    # TODO
+    
+    return 1;
 }
 
 
-1
-
-__END__
-
-
-
-
-
-
-
-
-
-
-
-
-
+1;
 
 __DATA__
 
@@ -102,32 +124,50 @@ Here is the Documentation:
 
 =head1 Name
 
-Proxer::Info
+Proxer::Notifications
 
-=head1 Functions
+=head1 Constructor
 
-=head2 GetEntry
+Proxer::Notifications can be accessed directly or via an existing `Proxer` object.
+`%options` are the same options like in the `Proxer` Constructor.
 
-View [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Entry)
+Direct access:
 
-Get the main information about an anime or manga.
+    use Proxer::Notifications;
+    
+    my $prxr_notify = Proxer::Notifications->new(%options);
+    
+Access via `Proxer`:
 
-    $anime = GetEntry($id);
+    my $prxr_notify = $prxr->notifications();
 
-Returns:
-    $VAR1 = {
-        'name' => 'One Piece',
-        'state' => '2',
-        'clicks' => '22858',
-        'genre' => 'Abenteuer Action Comedy Drama Fantasy Martial-Art Mystery Shounen Superpower Violence',
-        'fsk' => 'fsk12 bad_language violence',
-        'rate_sum' => '82413',
-        'rate_count' => '8851',
-        'medium' => 'animeseries',
-        'count' => '800',
-        'description' => "Wir schreiben [...] der Piraten!\n(Quelle: Kaz\x{e9})",
-        'license' => '2',
-        'id' => '53',
-        'kat' => 'anime'
-    };
+When you are using the direct way, `Proxer->new()` is called 
+internally. Do this only when you just need one specific function. 
+Avoid in bigger scripts.
+
+
+=head1 Methods
+
+=head2 GetCount
+
+    $prxr_notify->GetCount();
+
+View [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Notifications)
+
+=head2 GetNews
+
+Fetching the latest news.
+
+    $prxr_notify->GetNews($page, $limit);
+
+View [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Notifications)
+
+=head2 GetNews
+
+Delete a notification by ID.
+
+    $prxr_notify->Delete($nid);
+
+View [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Notifications)
+
 =cut

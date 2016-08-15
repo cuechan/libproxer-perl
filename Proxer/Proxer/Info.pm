@@ -53,14 +53,6 @@ sub new {
         
         $prxr_info->{Proxer} = $opt{_intern};
         $prxr_info->{Data} = 'DUMMY';
-        $prxr_info->{'Some other data'} = {
-            Foo => 'Bar',
-            baz => [
-                1,
-                2,
-                3,
-            ],
-        };
         
         return bless($prxr_info, $self);
     }
@@ -70,7 +62,6 @@ sub new {
         require Proxer;
         my $prxr = Proxer->new(@_);
         return $prxr->info();
-        return 1;
     }
 }
 

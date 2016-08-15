@@ -89,7 +89,7 @@ sub new {
         
         $lwp->agent("libproxer2-perl/v$VERSION ($^O; perlv$]))");
         $lwp->cookie_jar({}); # use temporary cookie jar
-        $lwp->timeout(5);    # set timeout to 30 seconds
+        $lwp->timeout(5);    # set timeout to 5 seconds
     }
     
     $proxer = {
@@ -121,7 +121,7 @@ sub notifications {
     my $self = shift;
     my $opt = {@_};
     
-    return Proxer::Notifications->new(Proxer => $self);
+    return Proxer::Notifications->new(_intern => $self);
 }
 
 sub user {
@@ -162,7 +162,8 @@ sub _api_access {
         my $api = decode_json($http_res->decoded_content);
         
         if($api->{error} != 0) {
-            $self->("API-err: ".$api->{message});
+            $self->_seterror("API-err: ".$api->{message});
+            return undef;
         }
         return $api ? $api : undef;
     }
