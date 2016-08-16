@@ -60,7 +60,7 @@ sub new {
         
         require Proxer;
         my $prxr = Proxer->new(@_);
-        return $prxr->info();
+        return $prxr->list();
     }
 }
 

@@ -131,6 +131,14 @@ sub user {
     return Proxer::User->new(_intern => $self);
 }
 
+sub list {
+    require Proxer::List;
+    my $self = shift;
+    my $opt = {@_};
+    
+    return Proxer::List->new(_intern => $self);
+}
+
 
 #####################
 # PRIVATE FUNCTIONS #
@@ -138,8 +146,6 @@ sub user {
 
 sub _api_access {
     my $self = shift;
-    
-    print Dumper('Proxer', $self);
     
     my ($api_class, $params) = @_;
     
