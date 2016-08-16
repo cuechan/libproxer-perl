@@ -123,7 +123,7 @@ sub EntrySearch {
     
     # convert arrays to strings
     my $post;
-    foreach(keys $filter) {
+    foreach(keys %$filter) {
         if(ref($filter->{$_}) eq 'ARRAY') {
             $filter->{$_} = join('+', @{$filter->{$_}});
         }
