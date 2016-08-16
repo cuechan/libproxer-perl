@@ -1,0 +1,245 @@
+#*************************************************************
+# Copyright 2016 Paul Maruhn.
+#
+# This program is distributed under the MIT (X11) License:
+# <http://www.opensource.org/licenses/mit-license.php>
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+#*************************************************************
+
+package Proxer::List;
+use lib '..';
+use parent 'Proxer';
+
+
+use strict;
+use warnings;
+our $VERSION = '0.01';
+
+use Carp;
+use JSON;
+use Data::Dumper;
+use utf8;
+
+
+sub new {
+    my $self = shift;
+    my %opt = @_;
+    
+    if($opt{_intern}) {
+        my $prxr_list;
+        carp "Indirect call" if $ENV{DEBUG};
+        
+        $prxr_list->{Proxer} = $opt{_intern};
+        $prxr_list->{Data} = 'DUMMY';
+        
+        return bless($prxr_list, $self);
+    }
+    else {
+        carp "Direct call" if $ENV{DEBUG};;
+        
+        require Proxer;
+        my $prxr = Proxer->new(@_);
+        return $prxr->info();
+    }
+}
+
+
+
+#####################
+#                   #
+#       MISC        #
+#                   #
+#####################
+
+sub _seterror {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    
+    
+    $Proxer->_seterror(@_);
+    
+    return @_;
+}
+
+sub error {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    
+    return $Proxer->error(@_);
+}
+
+
+###################
+#                 #
+#     METHODS     #
+#                 #
+###################
+
+
+sub EntrySearch {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    my $api_class = 'list/entrysearch';
+    my $filter = shift;
+    my $page = shift;
+    my $limit = shift;
+    
+    my $search = {
+        name => '',
+        language => '',
+        type => '',
+        genre => [],
+        nogenre => [],
+        fsk => [],
+        sort => '',
+        length => '',
+        'length-linit' => '',
+        tags => [],
+        notags => [],
+        tagratefilter => '',
+        tagspoilerfilter => '',
+    };
+    
+    # convert arrays to strings
+    my $post;
+    foreach(keys $filter) {
+        if(ref($filter->{$_}) eq 'ARRAY') {
+            $filter->{$_} = join('+', @{$filter->{$_}});
+        }
+    }
+    
+    $post->{p} = $page if $page;
+    $post->{limit} = $limit if $limit;
+    
+    my $res = $Proxer->_api_access($api_class, $filter);
+    return $res;
+}
+
+sub GetEntryList {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    my $api_class = 'list/entrylist';
+    my $post;
+    
+    my $filter = shift;
+    my $page = shift;
+    my $limit = shift;
+    
+    
+    $post = $filter if $filter;
+    $post->{p} = $page if $page;
+    $post->{limit} = $limit if $limit;
+    
+    my $res = $Proxer->_api_access($api_class, $post);
+}
+
+sub GetTagIDs {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    my $api_class = 'list/tagids';
+    my $search;
+    
+    my $tags = shift;
+    my $notags = shift;
+    
+    foreach(@{$tags}) {
+        $search .= " $_";
+    }
+    foreach(@{$notags}) {
+        $search .= " -$_";
+    }
+    
+    my $res = $Proxer->_api_access($api_class, {search => $search});
+    return $res;
+}
+
+sub GetTags {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    my $api_class = 'list/tags';
+    
+    my $filter = shift;
+    
+    my $res = $Proxer->_api_access($api_class, $filter);
+    return $res;
+}
+1
+
+
+__DATA__
+
+Here is the Documentation:
+
+
+=head1 Name
+
+Proxer::List
+
+=head1 Methods
+
+=head2 EntrySearch
+
+    $prxrlist->EntrySearch($filter, $page, $limit);
+
+example for $filter: 
+
+    $filter = {
+        name => 'Piece',
+        language => 'de',
+        type => 'animeseries',
+        genre => [
+            'action',
+            'dram',
+            'fantasy'
+        ],
+        nogenre => [
+            'romance'
+        ],
+        fsk => [
+            'fsk6',
+            'violence'
+        ],
+        sort => 'clicks',
+        length => '',
+        'length-linit' => '',
+        tags => [
+            222,
+            325,
+            176
+        ],
+        notags => [
+            34,
+            85
+        ],
+    }
+    
+All options are equivalent to the options mentioned in the L<wiki|http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search>.
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search>
+
+=head2 GetNames
+
+
+
+=cut
