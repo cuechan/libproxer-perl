@@ -158,19 +158,10 @@ sub GetTagIDs {
     my $self = shift;
     my $Proxer = $self->{Proxer};
     my $api_class = 'list/tagids';
-    my $search;
     
-    my $tags = shift;
-    my $notags = shift;
+    my $taglist = shift;
     
-    foreach(@{$tags}) {
-        $search .= " $_";
-    }
-    foreach(@{$notags}) {
-        $search .= " -$_";
-    }
-    
-    my $res = $Proxer->_api_access($api_class, {search => $search});
+    my $res = $Proxer->_api_access($api_class, {search => $taglist});
     return $res;
 }
 
@@ -238,7 +229,7 @@ All options are equivalent to the options mentioned in the L<wiki|http://proxer.
 
 L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search>
 
-=head2 GetNames
+=head2 GetEntryList
 
 
 

@@ -149,8 +149,8 @@ sub _api_access {
     
     my ($api_class, $params) = @_;
     
-    carp "API-CLASS: $api_class" if $ENV{DEBUG};
-    carp "PARAMS: ".Dumper($params) if $ENV{DEBUG};;
+    warn "API-CLASS: $api_class" if $ENV{DEBUG};
+    warn "PARAMS: ".Dumper($params) if $ENV{DEBUG};
     
     my $uri = $self->{BASE_URI}.$api_class;
     $params->{api_key} = $self->{API_KEY};
