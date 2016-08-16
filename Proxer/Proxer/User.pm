@@ -29,42 +29,127 @@
 
 package Proxer::User;
 
-use 5.006;
 use strict;
 use warnings;
 our $VERSION = '0.01';
 
+use Carp;
 use JSON;
 use Data::Dumper;
 use utf8;
 
-my $_Proxer;
 
 sub new {
-
-# Finally here's the code:
-    #~ print Dumper(@_);
-    #~ exit;
-    #
-    # We need to return a blessed reference to our main packahe (Proxer) 
-    # for using the functions in it. Especially the LWP object and the _api_connect function.
-    
     my $self = shift;
-    my $opt  = shift;
+    my %opt = @_;
     
-    return bless({Proxer => $opt}, $self);
+    if($opt{_intern}) {
+        my $prxr_user;
+        carp "Indirect call" if $ENV{DEBUG};
+        
+        $prxr_user->{Proxer} = $opt{_intern};
+        $prxr_user->{Iam} = $self;
+        
+        return bless($prxr_user, $self);
+    }
+    else {
+        carp "Direct call" if $ENV{DEBUG};;
+        
+        require Proxer;
+        my $prxr = Proxer->new(@_);
+        return $prxr->user();
+    }
 }
+
+sub _id_or_name {
+    my $ref = shift;
+    my $id = shift;
+    
+    if($id =~ m/^\d+$/) {
+        $$ref->{uid} = $id;
+    }
+    else {
+        $$ref->{username} = $id;
+    }
+    
+    return $$ref;
+}
+
+
+##########################
+#                        #
+#     Public Methods     #
+#                        #
+##########################
 
 sub Login {
     my $self = shift;
     my $Proxer = $self->{Proxer};
-    
     my ($login, $password) = @_;
-    
     my $url  = "user/login";
     
     my $data = $Proxer->_api_access($url, {username => $login, password => $password});
     return $data;
+}
+
+sub Logout {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    my $url  = "user/logout";
+    
+    my $data = $Proxer->_api_access($url);
+    return $data;
+}
+
+sub Userinfo {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    my $id = shift;
+    my $url = 'user/userinfo';
+    my $post;
+    
+    _id_or_name(\$post, $id);
+    
+    my $res = $Proxer->_api_access($url, $post);
+    
+    return $res;
+}
+
+sub GetTopten {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    my $id = shift;
+    my $kat = shift;
+    my $url = 'user/topten';
+    my $post;
+    
+    _id_or_name(\$post, $id);
+    
+    $post->{kat} = $kat;
+    
+    my $res = $Proxer->_api_access($url, $post);
+    return $res;
+}
+
+sub GetList {
+    my $self = shift;
+    my $Proxer = $self->{Proxer};
+    my $id = shift;
+    my $url = 'user/list';
+    my $post;
+    
+    
+    
+    _id_or_name(\$post, $id);
+    
+    
+    
+    
+    
+    
+    my $res = $Proxer->_api_access($url, $post);
+    
+    return $res;
 }
 
 

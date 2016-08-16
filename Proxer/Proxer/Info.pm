@@ -28,9 +28,6 @@
 #*************************************************************
 
 package Proxer::Info;
-use lib '..';
-#~ use Proxer;
-
 
 use 5.006;
 use strict;

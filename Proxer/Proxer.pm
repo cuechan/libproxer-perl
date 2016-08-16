@@ -39,7 +39,6 @@
 
 package Proxer;
 
-use 5.006;
 use strict;
 use warnings;
 our $VERSION = 0.01;
@@ -50,9 +49,7 @@ use LWP::UserAgent;
 use Data::Dumper;
 use JSON::XS;
 use lib 'Proxer';
-use Proxer::Info;
-use Proxer::Notifications;
-use Proxer::User;
+
 
 
 my $_Proxer;
@@ -111,6 +108,7 @@ sub new {
 ##################
 
 sub info {
+    require Proxer::Info;
     my $self = shift;
     my $opt = {@_};
     
@@ -118,6 +116,7 @@ sub info {
 }
 
 sub notifications {
+    require Proxer::Notifications;
     my $self = shift;
     my $opt = {@_};
     
@@ -125,10 +124,11 @@ sub notifications {
 }
 
 sub user {
+    require Proxer::User;
     my $self = shift;
     my $opt = {@_};
     
-    return Proxer::User->new(Proxer => $self);
+    return Proxer::User->new(_intern => $self);
 }
 
 
@@ -139,10 +139,12 @@ sub user {
 sub _api_access {
     my $self = shift;
     
+    print Dumper('Proxer', $self);
+    
     my ($api_class, $params) = @_;
     
-    carp "API-CLASS: $api_class";
-    carp "PARAMS: ".Dumper($params);
+    carp "API-CLASS: $api_class" if $ENV{DEBUG};
+    carp "PARAMS: ".Dumper($params) if $ENV{DEBUG};;
     
     my $uri = $self->{BASE_URI}.$api_class;
     $params->{api_key} = $self->{API_KEY};

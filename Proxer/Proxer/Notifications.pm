@@ -28,6 +28,8 @@
 #*************************************************************
 
 package Proxer::Notifications;
+use lib '..';
+use parent 'Proxer';
 
 use 5.006;
 use strict;
@@ -82,8 +84,11 @@ sub GetCount {
 }
 
 sub GetNews {
+    
+    print Dumper(@_);
+    
     my $self = shift;
-    my $Proxer = $self->{Proxer};
+    my $Proxer = $self; #->{Proxer};
     my $api_class  = "notifications/news";
     
     my $api = $Proxer->_api_access($api_class, undef);
