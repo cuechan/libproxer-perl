@@ -35,10 +35,10 @@ require v5.6.0;
 our $VERSION = 0.01;
 use Exporter 'import';
 our @EXPORT = qw(
-    EntrySearch
-    GetEntryList
-    GetTagIDs
-    GetTags
+  EntrySearch
+  GetEntryList
+  GetTagIDs
+  GetTags
 );
 
 use lib '..';
@@ -49,8 +49,6 @@ use JSON;
 use Data::Dumper;
 use utf8;
 
-
-
 ###########################
 #                         #
 #         Methods         #
@@ -58,83 +56,81 @@ use utf8;
 ###########################
 
 sub EntrySearch {
-    my $self = shift;
+    my $self      = shift;
     my $api_class = 'list/entrysearch';
-    my $filter = shift;
-    my $page = shift;
-    my $limit = shift;
-    
+    my $filter    = shift;
+    my $page      = shift;
+    my $limit     = shift;
+
     my $search = {
-        name => '',
-        language => '',
-        type => '',
-        genre => [],
-        nogenre => [],
-        fsk => [],
-        sort => '',
-        length => '',
-        'length-linit' => '',
-        tags => [],
-        notags => [],
-        tagratefilter => '',
+        name             => '',
+        language         => '',
+        type             => '',
+        genre            => [],
+        nogenre          => [],
+        fsk              => [],
+        sort             => '',
+        length           => '',
+        'length-linit'   => '',
+        tags             => [],
+        notags           => [],
+        tagratefilter    => '',
         tagspoilerfilter => '',
     };
-    
+
     # convert arrays to strings
     my $post;
-    foreach(keys %$filter) {
-        if(ref($filter->{$_}) eq 'ARRAY') {
-            $filter->{$_} = join('+', @{$filter->{$_}});
+    foreach ( keys %$filter ) {
+        if ( ref( $filter->{$_} ) eq 'ARRAY' ) {
+            $filter->{$_} = join( '+', @{ $filter->{$_} } );
         }
     }
-    
-    $post->{p} = $page if $page;
+
+    $post->{p}     = $page  if $page;
     $post->{limit} = $limit if $limit;
-    
-    my $res = $self->_api_access($api_class, $filter);
+
+    my $res = $self->_api_access( $api_class, $filter );
     return $res;
 }
 
 sub GetEntryList {
-    my $self = shift;
+    my $self      = shift;
     my $api_class = 'list/entrylist';
-    my $post = {@_};
-    
+    my $post      = {@_};
+
     my $req = Proxer::API::Request->new(
         $self,
         class => $api_class,
-        data => $post,
+        data  => $post,
     );
     $req->_perform;
-    
+
     return $req;
-    
-    
-    my $res = $self->_api_access($api_class, $post);
+
+    my $res = $self->_api_access( $api_class, $post );
 }
 
 sub GetTagIDs {
-    my $self = shift;
+    my $self      = shift;
     my $api_class = 'list/tagids';
-    
+
     my $taglist = shift;
-    
-    my $res = $self->_api_access($api_class, {search => $taglist});
+
+    my $res = $self->_api_access( $api_class, { search => $taglist } );
     return $res;
 }
 
 sub GetTags {
-    my $self = shift;
+    my $self      = shift;
     my $api_class = 'list/tags';
-    
+
     my $filter = shift;
-    
-    my $res = $self->_api_access($api_class, $filter);
+
+    my $res = $self->_api_access( $api_class, $filter );
     return $res;
 }
 
 1;
-
 
 __DATA__
 
