@@ -73,8 +73,12 @@ sub import {
             require Proxer::List;
             Proxer::List->import();
         }
+        elsif($_ eq 'User') {
+            require Proxer::User;
+            Proxer::User->import();
+        }
         else {
-            
+            carp "$_ is not part of libproxer";
         }
         
     }
@@ -111,9 +115,9 @@ sub new {
     else {
         $lwp = LWP::UserAgent->new();
         
-        $lwp->agent("libproxer2-perl/v$VERSION ($^O; perlv$]))");
+        $lwp->agent("libproxer2-perl/v$VERSION ($^O; perlv$])");
         $lwp->cookie_jar({}); # use temporary cookie jar
-        $lwp->timeout(5);    # set timeout to 5 seconds
+        $lwp->timeout(30);    # set timeout to 5 seconds
     }
     
     $proxer = {
@@ -176,15 +180,13 @@ sub _api_access {
     
     my ($api_class, $params) = @_;
     
-    warn "API-CLASS: $api_class" if $ENV{DEBUG};
-    warn "PARAMS: ".Dumper($params) if $ENV{DEBUG};
-    
     my $uri = $self->{BASE_URI}.$api_class;
     $params->{api_key} = $self->{API_KEY};
     
+    warn "API-URL: ", $uri if $ENV{DEBUG};
+    warn "PARAMS: ".Dumper($params) if $ENV{DEBUG};
+    
     my $http_res = $self->{LWP}->post($uri, $params);
-    
-    
     
     ##
     # Access the API
@@ -192,14 +194,10 @@ sub _api_access {
     
     if($http_res->is_error()) {
         $self->_seterror("HTTP err. ". $http_res->status_line);
+        croak $http_res->status_line;
         return undef;
     } else {
-        my $api = decode_json($http_res->decoded_content);
-        
-        if($api->{error} != 0) {
-            $self->_seterror("API-err: ".$api->{message});
-            return undef;
-        }
+        my $api = decode_json($http_res->decoded_content) or die "HTTP ERROR";
         return $api ? $api : undef;
     }
 }

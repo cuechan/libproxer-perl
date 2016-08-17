@@ -46,13 +46,13 @@ use Data::Dumper;
 use utf8;
 
 
-sub error {
-    my $self = shift;
-    my $Proxer = $self->{Proxer};
-    
-    return $Proxer->error(@_);
-}
 
+
+###########################
+#                         #
+#         Methods         #
+#                         #
+###########################
 
 sub GetCount {
     my $self = shift;

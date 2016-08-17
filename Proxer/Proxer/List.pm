@@ -41,6 +41,9 @@ our @EXPORT = qw(
     GetTags
 );
 
+use lib '..';
+use Proxer::API::Request;
+
 use Carp;
 use JSON;
 use Data::Dumper;
@@ -48,37 +51,11 @@ use utf8;
 
 
 
-
-#####################
-#                   #
-#       MISC        #
-#                   #
-#####################
-
-sub _seterror {
-    my $self = shift;
-    my $Proxer = $self->{Proxer};
-    
-    
-    $Proxer->_seterror(@_);
-    
-    return @_;
-}
-
-sub error {
-    my $self = shift;
-    my $Proxer = $self->{Proxer};
-    
-    return $Proxer->error(@_);
-}
-
-
-###################
-#                 #
-#     METHODS     #
-#                 #
-###################
-
+###########################
+#                         #
+#         Methods         #
+#                         #
+###########################
 
 sub EntrySearch {
     my $self = shift;
@@ -121,16 +98,17 @@ sub EntrySearch {
 sub GetEntryList {
     my $self = shift;
     my $api_class = 'list/entrylist';
-    my $post;
+    my $post = {@_};
     
-    my $filter = shift;
-    my $page = shift;
-    my $limit = shift;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data => $post,
+    );
+    $req->_perform;
     
+    return $req;
     
-    $post = $filter if $filter;
-    $post->{p} = $page if $page;
-    $post->{limit} = $limit if $limit;
     
     my $res = $self->_api_access($api_class, $post);
 }

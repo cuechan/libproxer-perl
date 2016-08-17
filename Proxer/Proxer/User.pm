@@ -40,6 +40,7 @@ our @EXPORT = qw(
     Userinfo
     GetTopten
     GetList
+    GetLatestComment
 );
 
 use Carp;
@@ -48,26 +49,11 @@ use Data::Dumper;
 use utf8;
 
 
-sub _id_or_name {
-    my $ref = shift;
-    my $id = shift;
-    
-    if($id =~ m/^\d+$/) {
-        $$ref->{uid} = $id;
-    }
-    else {
-        $$ref->{username} = $id;
-    }
-    
-    return $$ref;
-}
-
-
-##########################
-#                        #
-#     Public Methods     #
-#                        #
-##########################
+###########################
+#                         #
+#         Methods         #
+#                         #
+###########################
 
 sub Login {
     my $self = shift;
@@ -120,12 +106,7 @@ sub GetList {
     my $url = 'user/list';
     my $post;
     
-    
-    
     _id_or_name(\$post, $id);
-    
-    
-    
     
     
     
@@ -133,6 +114,43 @@ sub GetList {
     
     return $res;
 }
+
+sub GetLatestComment {
+    my $self = shift;
+    my $url = 'user/comments';
+    my $opt = {@_};
+    
+    _id_or_name(\$opt, $opt->{id});
+    
+    my $res = $self->_api_access($url, $opt);
+    
+    return $res;
+}
+
+
+#########################
+#                       #
+#       Functions       #
+#                       #
+#########################
+
+sub _id_or_name {
+    my $ref = shift;
+    my $id = shift;
+    
+    if($id =~ m/^\d+$/) {
+        delete $$ref->{username};
+        delete $$ref->{id};
+        $$ref->{uid} = $id;
+    }
+    else {
+        delete $$ref->{id};
+        $$ref->{username} = $id;
+    }
+    
+    return $$ref;
+}
+
 
 1;
 
@@ -146,30 +164,28 @@ Here is the Documentation:
 
 Proxer::Info
 
-=head1 Functions
+=head1 Methods
 
-=head2 GetEntry
+=head2 Login
 
-View [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Entry)
+Login a user.
 
-Get the main information about an anime or manga.
+    $proxer->Login($usernamem §password);
 
-    $anime = GetEntry($id);
+View [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/User#Login)
 
-Returns:
-    $VAR1 = {
-        'name' => 'One Piece',
-        'state' => '2',
-        'clicks' => '22858',
-        'genre' => 'Abenteuer Action Comedy Drama Fantasy Martial-Art Mystery Shounen Superpower Violence',
-        'fsk' => 'fsk12 bad_language violence',
-        'rate_sum' => '82413',
-        'rate_count' => '8851',
-        'medium' => 'animeseries',
-        'count' => '800',
-        'description' => "Wir schreiben [...] der Piraten!\n(Quelle: Kaz\x{e9})",
-        'license' => '2',
-        'id' => '53',
-        'kat' => 'anime'
-    };
+=head2 Logout
+
+Oppsite of login
+
+    $proxer->Logout();
+
+Returns nothing.
+
+View [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/User#Logout)
+
+=head2 Userinfo
+
+Todo: userinfo
+
 =cut

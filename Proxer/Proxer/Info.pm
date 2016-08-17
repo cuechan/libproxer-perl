@@ -30,6 +30,8 @@
 package Proxer::Info;
 use strict;
 use warnings;
+use lib '..';
+use Proxer::API::Request
 
 require v5.6.0;
 our $VERSION = 0.01;
@@ -57,38 +59,27 @@ use utf8;
 
 
 
-############################
-#                          #
-#     Standard Methods     #
-#                          #
-############################
-
-sub _seterror {
-    my $self = shift;
-    my $Proxer = $self->{Proxer};
-    
-    
-    $Proxer->_seterror(@_);
-    
-    return @_;
-}
-
-sub error {
-    my $self = shift;
-    my $Proxer = $self->{Proxer};
-    
-    return $Proxer->error(@_);
-}
-
-
+###########################
+#                         #
+#         Methods         #
+#                         #
+###########################
 
 sub GetEntry {
     my $self = shift;
     my $id   = shift;
     my $api_class  = "info/entry";
     
-    my $data = $self->_api_access($api_class, {id => $id});
-    return $data;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        obj => 1, 
+        data => {id => $id},
+    );
+    
+    $req->_perform(); #perform the request
+    
+    return $req;
 }
 
 sub GetNames {
