@@ -26,10 +26,29 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 #*************************************************************
+
+package Proxer;
+use strict;
+use warnings;
+
+require v5.6.0;
+our $VERSION = 0.01;
+use lib 'Proxer';
+
+use Carp;
+use LWP;
+use LWP::UserAgent;
+use Data::Dumper;
+use JSON::XS;
+
+
+
+
+
 #
 # +--------------+
 # |              |
-# |     TODO     |
+# |     TO DO    |
 # |              |
 # +--------------+
 #
@@ -37,22 +56,30 @@
 # Todo: A lot of other stuff
 
 
-package Proxer;
+sub import {
+    my $module = shift;
+    
+    # Unfortunately this need to be hardcoded
+    foreach(@_) {
+        if($_ eq 'Info') {
+            require Proxer::Info;
+            Proxer::Info->import();
+        }
+        elsif($_ eq 'Notifications') {
+            require Proxer::Notifications;
+            Proxer::Notifications->import();
+        }
+        elsif($_ eq 'List') {
+            require Proxer::List;
+            Proxer::List->import();
+        }
+        else {
+            
+        }
+        
+    }
+}
 
-use strict;
-use warnings;
-our $VERSION = 0.01;
-
-use Carp;
-use LWP;
-use LWP::UserAgent;
-use Data::Dumper;
-use JSON::XS;
-use lib 'Proxer';
-
-
-
-my $_Proxer;
 
 sub new {
     my $self = shift;

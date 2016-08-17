@@ -28,38 +28,25 @@
 #*************************************************************
 
 package Proxer::User;
-
 use strict;
 use warnings;
-our $VERSION = '0.01';
+
+require v5.6.0;
+our $VERSION = 0.01;
+use Exporter 'import';
+our @EXPORT = qw(
+    Login
+    Logout
+    Userinfo
+    GetTopten
+    GetList
+);
 
 use Carp;
 use JSON;
 use Data::Dumper;
 use utf8;
 
-
-sub new {
-    my $self = shift;
-    my %opt = @_;
-    
-    if($opt{_intern}) {
-        my $prxr_user;
-        carp "Indirect call" if $ENV{DEBUG};
-        
-        $prxr_user->{Proxer} = $opt{_intern};
-        $prxr_user->{Iam} = $self;
-        
-        return bless($prxr_user, $self);
-    }
-    else {
-        carp "Direct call" if $ENV{DEBUG};;
-        
-        require Proxer;
-        my $prxr = Proxer->new(@_);
-        return $prxr->user();
-    }
-}
 
 sub _id_or_name {
     my $ref = shift;
@@ -84,40 +71,36 @@ sub _id_or_name {
 
 sub Login {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my ($login, $password) = @_;
     my $url  = "user/login";
     
-    my $data = $Proxer->_api_access($url, {username => $login, password => $password});
+    my $data = $self->_api_access($url, {username => $login, password => $password});
     return $data;
 }
 
 sub Logout {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my $url  = "user/logout";
     
-    my $data = $Proxer->_api_access($url);
+    my $data = $self->_api_access($url);
     return $data;
 }
 
 sub Userinfo {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my $id = shift;
     my $url = 'user/userinfo';
     my $post;
     
     _id_or_name(\$post, $id);
     
-    my $res = $Proxer->_api_access($url, $post);
+    my $res = $self->_api_access($url, $post);
     
     return $res;
 }
 
 sub GetTopten {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my $id = shift;
     my $kat = shift;
     my $url = 'user/topten';
@@ -127,13 +110,12 @@ sub GetTopten {
     
     $post->{kat} = $kat;
     
-    my $res = $Proxer->_api_access($url, $post);
+    my $res = $self->_api_access($url, $post);
     return $res;
 }
 
 sub GetList {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my $id = shift;
     my $url = 'user/list';
     my $post;
@@ -147,13 +129,12 @@ sub GetList {
     
     
     
-    my $res = $Proxer->_api_access($url, $post);
+    my $res = $self->_api_access($url, $post);
     
     return $res;
 }
 
-
-1
+1;
 
 
 __DATA__

@@ -28,11 +28,27 @@
 #*************************************************************
 
 package Proxer::Info;
-
-use 5.006;
 use strict;
 use warnings;
-our $VERSION = '0.01';
+
+require v5.6.0;
+our $VERSION = 0.01;
+use Exporter 'import';
+our @EXPORT = qw(
+    GetEntry
+    GetNames
+    GetGate
+    GetLang
+    GetSeason
+    GetGroups
+    GetPublisher
+    GetListinfo
+    GetComments
+    GetRelations
+    GetEntryTags
+    SetUserinfo
+);
+
 
 use Carp;
 use JSON;
@@ -40,27 +56,6 @@ use Data::Dumper;
 use utf8;
 
 
-sub new {
-    my $self = shift;
-    my %opt = @_;
-    
-    if($opt{_intern}) {
-        my $prxr_info;
-        carp "Indirect call" if $ENV{DEBUG};
-        
-        $prxr_info->{Proxer} = $opt{_intern};
-        $prxr_info->{Data} = 'DUMMY';
-        
-        return bless($prxr_info, $self);
-    }
-    else {
-        carp "Direct call" if $ENV{DEBUG};;
-        
-        require Proxer;
-        my $prxr = Proxer->new(@_);
-        return $prxr->info();
-    }
-}
 
 ############################
 #                          #
@@ -89,83 +84,75 @@ sub error {
 
 sub GetEntry {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my $id   = shift;
     my $api_class  = "info/entry";
     
-    my $data = $Proxer->_api_access($api_class, {id => $id});
+    my $data = $self->_api_access($api_class, {id => $id});
     return $data;
 }
 
 sub GetNames {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $id = shift;
     my $api_class = "info/names";
     
-    my $data = $Proxer->_api_access($api_class, {id => $id});
+    my $data = $self->_api_access($api_class, {id => $id});
     
     return $data;
 }
 
 sub GetGate {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $id = shift;
     my $api_class = "info/gate";
     
-    my $data = $Proxer->_api_access($api_class, {id => $id});
+    my $data = $self->_api_access($api_class, {id => $id});
     
     return $data;
 }
 
 sub GetLang {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $id = shift;
     my $api_class = "info/lang";
     
-    my $data = $Proxer->_api_access($api_class, {id => $id});
+    my $data = $self->_api_access($api_class, {id => $id});
     
     return $data;
 }
 
 sub GetSeason {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $id = shift;
     my $api_class = "info/season";
     
-    my $data = $Proxer->_api_access($api_class, {id => $id});
+    my $data = $self->_api_access($api_class, {id => $id});
     
     return $data;
 }
 
 sub GetGroups {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $id = shift;
     my $api_class = "info/groups";
     
-    my $data = $Proxer->_api_access($api_class, {id => $id});
+    my $data = $self->_api_access($api_class, {id => $id});
     
     return $data;
 }
 
 sub GetPublisher {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $id = shift;
     my $api_class = "info/publisher";
     
-    my $data = $Proxer->_api_access($api_class, {id => $id});
+    my $data = $self->_api_access($api_class, {id => $id});
     
     return $data;
 }
 
 sub GetListinfo {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $api_class = "info/listinfo";
     
     # Todo: Workaround for just getting the number of entries and more magic in background
@@ -179,27 +166,24 @@ sub GetListinfo {
     $post->{p} = $page if $page;
     $post->{limit} = $limit if $limit;
     
-    my $data = $Proxer->_api_access($api_class, $post);
+    my $data = $self->_api_access($api_class, $post);
     
     return $data;
 }
 
 sub GetComments {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $id = shift;
     my $api_class = "info/comments";
     
-    my $data = $Proxer->_api_access($api_class, {id => $id});
+    my $data = $self->_api_access($api_class, {id => $id});
     
     return $data;
 }
 
 sub GetRelations {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $api_class = "info/relations";
-    
     
     # Todo: Magic
     
@@ -212,37 +196,35 @@ sub GetRelations {
     $post->{p} = $page if $page;
     $post->{limit} = $limit if $limit;
     
-    my $data = $Proxer->_api_access($api_class, $post);
+    my $data = $self->_api_access($api_class, $post);
     
     return $data;
 }
 
 sub GetEntryTags {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $id = shift;
     my $api_class = "info/entrytags";
     
-    my $data = $Proxer->_api_access($api_class, {id => $id});
+    my $data = $self->_api_access($api_class, {id => $id});
     
     return $data;
 }
 
 sub SetUserinfo {
     my $self = shift;
-    my $Proxer  = $self->{Proxer};
     my $id = shift;
     my $api_class = "info/setuserinfo";
     
     my $list = shift; # note | favor | finish
     
     
-    my $data = $Proxer->_api_access($api_class, {id => $id, type => $list});
+    my $data = $self->_api_access($api_class, {id => $id, type => $list});
     
     return $data;
 }
 
-1
+1;
 
 
 __DATA__

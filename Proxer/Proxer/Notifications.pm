@@ -28,42 +28,23 @@
 #*************************************************************
 
 package Proxer::Notifications;
-use lib '..';
-use parent 'Proxer';
-
-use 5.006;
 use strict;
 use warnings;
-our $VERSION = '0.01';
+
+require v5.6.0;
+our $VERSION = 0.01;
+use Exporter 'import';
+our @EXPORT = qw(
+    Delete
+    GetCount
+    GetNews
+);
 
 use Carp;
 use JSON;
 use Data::Dumper;
 use utf8;
 
-my $_Proxer;
-
-sub new {
-    my $self = shift;
-    my %opt = @_;
-    
-    carp "Proxer::Notifications Constructor called" if $ENV{DEBUG};
-    
-    if($opt{_intern}) {
-        my $prxr_notify;
-        
-        $prxr_notify->{Proxer} = $opt{_intern};
-        $prxr_notify->{Data} = 'DUMMY';
-        
-        return bless($prxr_notify, $self);
-    }
-    else {
-        require Proxer;
-        
-        my $prxr = Proxer->new(%opt);
-        return $prxr->notifications();
-    }
-}
 
 sub error {
     my $self = shift;

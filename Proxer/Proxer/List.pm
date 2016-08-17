@@ -28,41 +28,24 @@
 #*************************************************************
 
 package Proxer::List;
-use lib '..';
-use parent 'Proxer';
-
-
 use strict;
 use warnings;
-our $VERSION = '0.01';
+
+require v5.6.0;
+our $VERSION = 0.01;
+use Exporter 'import';
+our @EXPORT = qw(
+    EntrySearch
+    GetEntryList
+    GetTagIDs
+    GetTags
+);
 
 use Carp;
 use JSON;
 use Data::Dumper;
 use utf8;
 
-
-sub new {
-    my $self = shift;
-    my %opt = @_;
-    
-    if($opt{_intern}) {
-        my $prxr_list;
-        carp "Indirect call" if $ENV{DEBUG};
-        
-        $prxr_list->{Proxer} = $opt{_intern};
-        $prxr_list->{Data} = 'DUMMY';
-        
-        return bless($prxr_list, $self);
-    }
-    else {
-        carp "Direct call" if $ENV{DEBUG};;
-        
-        require Proxer;
-        my $prxr = Proxer->new(@_);
-        return $prxr->list();
-    }
-}
 
 
 
@@ -99,7 +82,6 @@ sub error {
 
 sub EntrySearch {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my $api_class = 'list/entrysearch';
     my $filter = shift;
     my $page = shift;
@@ -132,13 +114,12 @@ sub EntrySearch {
     $post->{p} = $page if $page;
     $post->{limit} = $limit if $limit;
     
-    my $res = $Proxer->_api_access($api_class, $filter);
+    my $res = $self->_api_access($api_class, $filter);
     return $res;
 }
 
 sub GetEntryList {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my $api_class = 'list/entrylist';
     my $post;
     
@@ -151,31 +132,30 @@ sub GetEntryList {
     $post->{p} = $page if $page;
     $post->{limit} = $limit if $limit;
     
-    my $res = $Proxer->_api_access($api_class, $post);
+    my $res = $self->_api_access($api_class, $post);
 }
 
 sub GetTagIDs {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my $api_class = 'list/tagids';
     
     my $taglist = shift;
     
-    my $res = $Proxer->_api_access($api_class, {search => $taglist});
+    my $res = $self->_api_access($api_class, {search => $taglist});
     return $res;
 }
 
 sub GetTags {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my $api_class = 'list/tags';
     
     my $filter = shift;
     
-    my $res = $Proxer->_api_access($api_class, $filter);
+    my $res = $self->_api_access($api_class, $filter);
     return $res;
 }
-1
+
+1;
 
 
 __DATA__
