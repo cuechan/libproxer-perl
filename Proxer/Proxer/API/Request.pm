@@ -33,7 +33,7 @@ use warnings;
 require v5.6.0;
 
 use Carp;
-use JSON;
+use JSON::XS;
 use Data::Dumper;
 use utf8;
 

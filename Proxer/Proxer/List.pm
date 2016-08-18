@@ -43,7 +43,6 @@ our @EXPORT = qw(
 
 use lib '..';
 use Proxer::API::Request;
-
 use Carp;
 use Data::Dumper;
 

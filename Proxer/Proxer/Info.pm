@@ -30,8 +30,6 @@
 package Proxer::Info;
 use strict;
 use warnings;
-use lib '..';
-use Proxer::API::Request
 
 require v5.6.0;
 our $VERSION = 0.01;
@@ -51,7 +49,8 @@ our @EXPORT = qw(
     SetUserinfo
 );
 
-
+use lib '..';
+use Proxer::API::Request
 use Carp;
 use JSON;
 use Data::Dumper;

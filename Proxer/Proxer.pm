@@ -72,6 +72,10 @@ sub import {
             require Proxer::User;
             Proxer::User->import();
         }
+        elsif ( $_ eq 'Ucp' ) {
+            require Proxer::Ucp;
+            Proxer::Ucp->import();
+        }
         else {
             carp "$_ is not part of libproxer";
         }
@@ -117,7 +121,7 @@ sub new {
         BASE_URI => "https://proxer.me/api/v1/",
         API_KEY  => $api_key,
         LWP      => $lwp,
-        rawmode  => $opt->{rawmode} != 0 ? 1 : undef,
+        rawmode  => $opt->{rawmode} ? 1 : undef,
     };
 
     return bless( $proxer, $self );

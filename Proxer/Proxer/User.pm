@@ -125,7 +125,7 @@ sub GetTopten {
 sub GetList {
     my $self = shift;
     my $id = shift;
-    my $post = {@_}; 
+    my $post = {@_};
     my $api_class = 'user/list';
     
     _id_or_name(\$post, $id);
