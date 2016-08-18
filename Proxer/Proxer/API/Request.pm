@@ -41,15 +41,69 @@ sub new {
     my $self   = shift;
     my $Proxer = shift;
     my $opt    = {@_};
-    my $data   = $opt->{data};
+    my $post   = $opt->{data};
     my $me;
+    my $request;
 
-    $me->{API_CLASS} = $args->{class};
-    $me->{REQUEST_DATA} = $args->{data} ? $args->{data} : {};
+    $request->{post_data} = $post;
 
-    return bless( $req, $self );
+    $me->{proxer}    = $Proxer;
+    $me->{api_class} = $opt->{class};
+    $me->{REQUEST}   = $request;
+
+    return bless( $me, $self );
 }
 
-sub perform {
+
+sub _perform {
     my $self = shift;
+    
+    
+    my $Proxer = $self->{proxer};
+    my $api_class = $self->{api_class};
+    my $request = $self->{REQUEST};
+    my $response;
+    my $status;
+    
+    my $res = $Proxer->_api_access($api_class, $request->{post_data});
+    
+    if ( $res->is_error() ) {
+        $Proxer->_seterror( "HTTP err. " . $res->status_line );
+        
+        $response->{error} = 1;
+        $response->{message} = "HTTP err. " . $res->status_line;
+        $response->{code} = 4000;
+    }
+    else {
+        my $api = eval {decode_json( $res->decoded_content )};
+        
+        unless($api) {
+            $Proxer->_seterror("JSON err. Json cannot be parsed");
+            
+            $response->{error} = 1;
+            $response->{message} = "JSON err. Json cannot be parsed";
+            $response->{code} = 5000;
+        }
+        else {
+            $response = $api;
+        }
+    }
+    
+    $self->{RESPONSE} = $response;
+    
+    #~ print Dumper $self;
+}
+
+sub failed {
+    my $self = shift;
+    my $response = $self->{RESPONSE};
+    
+    return undef if $response->{error} != 0;
+}
+
+sub data {
+    my $self = shift;
+    my $response = $self->{RESPONSE};
+    
+    return $response->{data};
 }

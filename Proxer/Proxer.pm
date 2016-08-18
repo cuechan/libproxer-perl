@@ -175,20 +175,8 @@ sub _api_access {
     warn "PARAMS: " . Dumper($params) if $ENV{DEBUG};
 
     my $http_res = $self->{LWP}->post( $uri, $params );
-
-    ##
-    # Access the API
-    ##
-
-    if ( $http_res->is_error() ) {
-        $self->_seterror( "HTTP err. " . $http_res->status_line );
-        croak $http_res->status_line;
-        return undef;
-    }
-    else {
-        my $api = decode_json( $http_res->decoded_content ) or die "HTTP ERROR";
-        return $api ? $api : undef;
-    }
+    
+    return $http_res;
 }
 
 # todo: postprocess function
