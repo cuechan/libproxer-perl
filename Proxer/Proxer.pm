@@ -82,7 +82,6 @@ sub import {
 sub new {
     my $self = shift;
     my $opt  = {@_};
-    my $proxer;
     my $api_key;
 
     if ( $opt->{key} ) {
@@ -101,8 +100,6 @@ sub new {
         croak("No key defined");
         return undef;
     }
-    
-    $proxer->{rawmode} = $opt->{rawmode} != 0 ? 1 : undef;
 
     my $lwp;
     if ( $opt->{UserAgent} ) {
@@ -116,10 +113,11 @@ sub new {
         $lwp->timeout(30);         # set timeout to 5 seconds
     }
 
-    $proxer = {
+    my $proxer = {
         BASE_URI => "https://proxer.me/api/v1/",
         API_KEY  => $api_key,
         LWP      => $lwp,
+        rawmode  => $opt->{rawmode} != 0 ? 1 : undef,
     };
 
     return bless( $proxer, $self );
