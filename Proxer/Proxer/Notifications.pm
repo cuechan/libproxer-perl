@@ -40,6 +40,8 @@ our @EXPORT = qw(
     GetNews
 );
 
+use lib '..';
+use Proxer::API::Request;
 use Carp;
 use JSON;
 use Data::Dumper;
@@ -56,48 +58,43 @@ use utf8;
 
 sub GetCount {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
     my $api_class  = "notifications/count";
     
-    my $res = $Proxer->_api_access($api_class, undef);
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class
+    );
     
-    return $res;
+    return $req->_perform;
 }
 
 sub GetNews {
-    
-    print Dumper(@_);
-    
     my $self = shift;
-    my $Proxer = $self; #->{Proxer};
     my $api_class  = "notifications/news";
+    my $post = {@_};
     
-    my $api = $Proxer->_api_access($api_class, undef);
-    return $api;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data => $post
+    );
     
-    
-    #~ if($api->{error} != 0) {
-        #~ return undef;
-    #~ }
-    #~ else {
-        #~ my @news = @{$api->{data}};
-        #~ return @news;
-    #~ }
+    return $req->_perform;
 }
 
 sub Delete {
     my $self = shift;
-    my $Proxer = $self->{Proxer};
-    my $id = shift;
     my $api_class = 'notifications/delete';
+    my $id = shift;
     
-    my $data = $Proxer->_api_access($api_class, $id);
-    return $data;
     
-    carp "not implemented yet";
-    # TODO
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data => {nid => $id}
+    );
     
-    return 1;
+    return $req->_perform;    
 }
 
 
