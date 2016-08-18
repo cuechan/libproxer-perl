@@ -101,6 +101,8 @@ sub new {
         croak("No key defined");
         return undef;
     }
+    
+    $proxer->{rawmode} = $opt->{rawmode} != 0 ? 1 : undef;
 
     my $lwp;
     if ( $opt->{UserAgent} ) {
