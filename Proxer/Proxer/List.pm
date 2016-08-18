@@ -84,15 +84,15 @@ sub EntrySearch {
             $post->{$_} = $args->{$_};
         }
     }
-    
+
     my $req = Proxer::API::Request->new(
         $self,
         class => $api_class,
         data  => $post,
     );
-    
+
     return $req->_perform;
-    
+
 }
 
 sub GetEntryList {
@@ -111,28 +111,28 @@ sub GetEntryList {
 sub GetTagIDs {
     my $self      = shift;
     my $api_class = 'list/tagids';
-    my $taglist = shift;
-    
+    my $taglist   = shift;
+
     my $req = Proxer::API::Request->new(
         $self,
         class => $api_class,
         data  => { search => $taglist },
     );
-    
+
     return $req->_perform;
 }
 
 sub GetTags {
     my $self      = shift;
     my $api_class = 'list/tags';
-    my $filter = shift;
-    
+    my $filter    = shift;
+
     my $req = Proxer::API::Request->new(
         $self,
         class => $api_class,
         data  => $filter,
     );
-    
+
     return $req->_perform;
 }
 
