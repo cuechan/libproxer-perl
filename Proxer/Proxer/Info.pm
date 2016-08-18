@@ -73,7 +73,6 @@ sub GetEntry {
     my $req = Proxer::API::Request->new(
         $self,
         class => $api_class,
-        obj => 1, 
         data => {id => $id},
     );
     
@@ -87,9 +86,13 @@ sub GetNames {
     my $id = shift;
     my $api_class = "info/names";
     
-    my $data = $self->_api_access($api_class, {id => $id});
-    
-    return $data;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => {id => $id},
+    );
+
+    return $req->_perform;
 }
 
 sub GetGate {
@@ -97,9 +100,13 @@ sub GetGate {
     my $id = shift;
     my $api_class = "info/gate";
     
-    my $data = $self->_api_access($api_class, {id => $id});
-    
-    return $data;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => {id => $id},
+    );
+
+    return $req->_perform
 }
 
 sub GetLang {
@@ -107,9 +114,13 @@ sub GetLang {
     my $id = shift;
     my $api_class = "info/lang";
     
-    my $data = $self->_api_access($api_class, {id => $id});
-    
-    return $data;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => {id => $id},
+    );
+
+    return $req->_perform;
 }
 
 sub GetSeason {
@@ -117,9 +128,13 @@ sub GetSeason {
     my $id = shift;
     my $api_class = "info/season";
     
-    my $data = $self->_api_access($api_class, {id => $id});
-    
-    return $data;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => {id => $id},
+    );
+
+    return $req->_perform;
 }
 
 sub GetGroups {
@@ -127,9 +142,13 @@ sub GetGroups {
     my $id = shift;
     my $api_class = "info/groups";
     
-    my $data = $self->_api_access($api_class, {id => $id});
-    
-    return $data;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => {id => $id},
+    );
+
+    return $req->_perform;
 }
 
 sub GetPublisher {
@@ -137,9 +156,13 @@ sub GetPublisher {
     my $id = shift;
     my $api_class = "info/publisher";
     
-    my $data = $self->_api_access($api_class, {id => $id});
-    
-    return $data;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => {id => $id},
+    );
+
+    return $req->_perform;
 }
 
 sub GetListinfo {
@@ -167,29 +190,28 @@ sub GetComments {
     my $id = shift;
     my $api_class = "info/comments";
     
-    my $data = $self->_api_access($api_class, {id => $id});
-    
-    return $data;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => {id => $id},
+    );
+
+    return $req->_perform;
 }
 
 sub GetRelations {
     my $self = shift;
     my $api_class = "info/relations";
     
-    # Todo: Magic
+    my $post = {@_};
     
-    my $id = shift;
-    my $page = shift;
-    my $limit = shift;
-    
-    my $post;
-    $post->{id} = $id;
-    $post->{p} = $page if $page;
-    $post->{limit} = $limit if $limit;
-    
-    my $data = $self->_api_access($api_class, $post);
-    
-    return $data;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => $post,
+    );
+
+    return $req->_perform;
 }
 
 sub GetEntryTags {
@@ -197,9 +219,13 @@ sub GetEntryTags {
     my $id = shift;
     my $api_class = "info/entrytags";
     
-    my $data = $self->_api_access($api_class, {id => $id});
-    
-    return $data;
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => {id => $id},
+    );
+
+    return $req->_perform;
 }
 
 sub SetUserinfo {
@@ -207,12 +233,16 @@ sub SetUserinfo {
     my $id = shift;
     my $api_class = "info/setuserinfo";
     
-    my $list = shift; # note | favor | finish
+    my $stat = shift; # note | favor | finish
     
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => {id => $id, type => $stat},
+    );
+
+    return $req->_perform
     
-    my $data = $self->_api_access($api_class, {id => $id, type => $list});
-    
-    return $data;
 }
 
 1;

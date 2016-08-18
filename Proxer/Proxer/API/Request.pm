@@ -113,8 +113,13 @@ sub _perform {
 sub failed {
     my $self     = shift;
     my $response = $self->{RESPONSE};
-
-    return undef if $response->{error} != 0;
+    
+    if($response->{error} != 0) {
+        return 1;
+    }
+    else {
+        return undef;
+    }
 }
 
 sub data {
@@ -122,4 +127,11 @@ sub data {
     my $response = $self->{RESPONSE};
 
     return $response->{data};
+}
+
+sub error {
+    my $self = shift;
+    my $response = $self->{RESPONSE};
+    
+    return $response->{message};
 }
