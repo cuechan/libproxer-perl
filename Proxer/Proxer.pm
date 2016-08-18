@@ -123,42 +123,6 @@ sub new {
     return bless( $proxer, $self );
 }
 
-##################
-# MAIN FUNCTIONS #
-##################
-
-sub info {
-    require Proxer::Info;
-    my $self = shift;
-    my $opt  = {@_};
-
-    return Proxer::Info->new( _intern => $self );
-}
-
-sub notifications {
-    require Proxer::Notifications;
-    my $self = shift;
-    my $opt  = {@_};
-
-    return Proxer::Notifications->new( _intern => $self );
-}
-
-sub user {
-    require Proxer::User;
-    my $self = shift;
-    my $opt  = {@_};
-
-    return Proxer::User->new( _intern => $self );
-}
-
-sub list {
-    require Proxer::List;
-    my $self = shift;
-    my $opt  = {@_};
-
-    return Proxer::List->new( _intern => $self );
-}
-
 #####################
 # PRIVATE FUNCTIONS #
 #####################
@@ -179,15 +143,6 @@ sub _api_access {
     return $http_res;
 }
 
-# todo: postprocess function
-
-sub page {
-    my $self  = shift;
-    my $total = shift;
-
-    # todo: More Magic
-}
-
 sub _seterror {
     my $self = shift;
     my $message;
@@ -198,6 +153,21 @@ sub _seterror {
     $self->{LAST_ERROR} = $message;
     return 1;
 }
+
+##########################
+#                        #
+#     PUBLIC METHODS     #
+#                        #
+##########################
+
+sub rawmode {
+    my $self = shift;
+    my $mode = shift;
+    
+    $self->{rawmod} = $mode != 0 ? 1 : undef,
+}
+
+
 
 sub error {
     my $self = shift;
