@@ -54,56 +54,72 @@ sub new {
     return bless( $me, $self );
 }
 
-
 sub _perform {
+#    +------------------------------------------------
+#    |  This Methods invokes the actual Request and 
+#    |  also controls what the user get back.
+#    |
+#    |
+#    +------------------------------------------------
+
     my $self = shift;
-    
-    
-    my $Proxer = $self->{proxer};
+
+    my $Proxer    = $self->{proxer};
     my $api_class = $self->{api_class};
-    my $request = $self->{REQUEST};
+    my $request   = $self->{REQUEST};
     my $response;
     my $status;
-    
-    my $res = $Proxer->_api_access($api_class, $request->{post_data});
-    
+
+    my $res = $Proxer->_api_access( $api_class, $request->{post_data} );
+
+    if ( $Proxer->{rawmode} ) {
+        # Manipulate the returment for rawmode
+        if($res->is_error) {
+            $Proxer->_seterror("HTTP err. " . $res->status_line);
+            return undef;
+        }
+        else {
+            return eval {decode_json($res->decoded_content)};
+        }
+    }
+
     if ( $res->is_error() ) {
         $Proxer->_seterror( "HTTP err. " . $res->status_line );
-        
-        $response->{error} = 1;
+
+        $response->{error}   = 1;
         $response->{message} = "HTTP err. " . $res->status_line;
-        $response->{code} = 4000;
+        $response->{code}    = 4000;
     }
     else {
-        my $api = eval {decode_json( $res->decoded_content )};
-        
-        unless($api) {
+        my $api = eval { decode_json( $res->decoded_content ) };
+
+        unless ($api) {
             $Proxer->_seterror("JSON err. Json cannot be parsed");
-            
-            $response->{error} = 1;
+
+            $response->{error}   = 1;
             $response->{message} = "JSON err. Json cannot be parsed";
-            $response->{code} = 5000;
+            $response->{code}    = 5000;
         }
         else {
             $response = $api;
         }
     }
-    
+
     $self->{RESPONSE} = $response;
     
-    #~ print Dumper $self;
+    return $self;
 }
 
 sub failed {
-    my $self = shift;
+    my $self     = shift;
     my $response = $self->{RESPONSE};
-    
+
     return undef if $response->{error} != 0;
 }
 
 sub data {
-    my $self = shift;
+    my $self     = shift;
     my $response = $self->{RESPONSE};
-    
+
     return $response->{data};
 }
