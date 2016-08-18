@@ -56,9 +56,7 @@ use Data::Dumper;
 sub EntrySearch {
     my $self      = shift;
     my $api_class = 'list/entrysearch';
-    my $filter    = shift;
-    my $page      = shift;
-    my $limit     = shift;
+    my $args      = {@_};
 
     my $search = {
         name             => '',
@@ -78,17 +76,23 @@ sub EntrySearch {
 
     # convert arrays to strings
     my $post;
-    foreach ( keys %$filter ) {
-        if ( ref( $filter->{$_} ) eq 'ARRAY' ) {
-            $filter->{$_} = join( '+', @{ $filter->{$_} } );
+    foreach ( keys %$args ) {
+        if ( ref( $args->{$_} ) eq 'ARRAY' ) {
+            $post->{$_} = join( '+', @{ $args->{$_} } );
+        }
+        else {
+            $post->{$_} = $args->{$_};
         }
     }
-
-    $post->{p}     = $page  if $page;
-    $post->{limit} = $limit if $limit;
-
-    my $res = $self->_api_access( $api_class, $filter );
-    return $res;
+    
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => $post,
+    );
+    
+    return $req->_perform;
+    
 }
 
 sub GetEntryList {
@@ -101,31 +105,35 @@ sub GetEntryList {
         class => $api_class,
         data  => $post,
     );
-    $req->_perform;
-
-    return $req;
-
-    my $res = $self->_api_access( $api_class, $post );
+    return $req->_perform;
 }
 
 sub GetTagIDs {
     my $self      = shift;
     my $api_class = 'list/tagids';
-
     my $taglist = shift;
-
-    my $res = $self->_api_access( $api_class, { search => $taglist } );
-    return $res;
+    
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => { search => $taglist },
+    );
+    
+    return $req->_perform;
 }
 
 sub GetTags {
     my $self      = shift;
     my $api_class = 'list/tags';
-
     my $filter = shift;
-
-    my $res = $self->_api_access( $api_class, $filter );
-    return $res;
+    
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data  => $filter,
+    );
+    
+    return $req->_perform;
 }
 
 1;
