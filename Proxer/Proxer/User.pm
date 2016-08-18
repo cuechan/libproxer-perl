@@ -43,6 +43,8 @@ our @EXPORT = qw(
     GetLatestComment
 );
 
+use lib '..';
+use Proxer::API::Request;
 use Carp;
 use JSON;
 use Data::Dumper;
@@ -58,73 +60,100 @@ use utf8;
 sub Login {
     my $self = shift;
     my ($login, $password) = @_;
-    my $url  = "user/login";
+    my $api_class  = "user/login";
     
-    my $data = $self->_api_access($url, {username => $login, password => $password});
-    return $data;
+    my $res = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data => {
+            username => $login,
+            password => $password
+        },
+    );
+    
+    return $res->_perform;
 }
 
 sub Logout {
     my $self = shift;
-    my $url  = "user/logout";
+    my $api_class  = "user/logout";
     
-    my $data = $self->_api_access($url);
-    return $data;
+    my $res = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+    );
+    
+    return $res->_perform;
 }
 
 sub Userinfo {
     my $self = shift;
     my $id = shift;
-    my $url = 'user/userinfo';
+    my $api_class = 'user/userinfo';
     my $post;
     
     _id_or_name(\$post, $id);
     
-    my $res = $self->_api_access($url, $post);
+    my $res = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data => $post
+    );
     
-    return $res;
+    return $res->_perform;
 }
 
 sub GetTopten {
     my $self = shift;
     my $id = shift;
     my $kat = shift;
-    my $url = 'user/topten';
+    my $api_class = 'user/topten';
     my $post;
     
     _id_or_name(\$post, $id);
-    
     $post->{kat} = $kat;
     
-    my $res = $self->_api_access($url, $post);
-    return $res;
+    my $res = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data => $post
+    );
+    
+    return $res->_perform;
 }
 
 sub GetList {
     my $self = shift;
     my $id = shift;
-    my $url = 'user/list';
-    my $post;
+    my $post = {@_}; 
+    my $api_class = 'user/list';
     
     _id_or_name(\$post, $id);
     
+    my $res = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data => $post
+    );
     
-    
-    my $res = $self->_api_access($url, $post);
-    
-    return $res;
+    return $res->_perform;
 }
 
 sub GetLatestComment {
     my $self = shift;
-    my $url = 'user/comments';
-    my $opt = {@_};
+    my $api_class = 'user/comments';
+    my $id = shift;
+    my $post = {@_};
     
-    _id_or_name(\$opt, $opt->{id});
+    _id_or_name(\$post, $id);
     
-    my $res = $self->_api_access($url, $opt);
+    my $res = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data => $post
+    );
     
-    return $res;
+    return $res->_perform;
 }
 
 
