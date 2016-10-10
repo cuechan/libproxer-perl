@@ -50,9 +50,9 @@ our @EXPORT = qw(
 );
 
 use lib '..';
-use Proxer::API::Request
+use Proxer::API::Request;
 use Carp;
-use JSON;
+use JSON::XS;
 use Data::Dumper;
 use utf8;
 
@@ -167,34 +167,28 @@ sub GetPublisher {
 sub GetListinfo {
     my $self = shift;
     my $api_class = "info/listinfo";
-    
-    # Todo: Workaround for just getting the number of entries and more magic in background
-    # This maybe be an global function in Proxer
-    
-    my $id = shift;
-    my $page = shift;
-    my $limit = shift;
-    
-    my $post = {id => $id};
-    $post->{p} = $page if $page;
-    $post->{limit} = $limit if $limit;
-    
-    my $data = $self->_api_access($api_class, $post);
-    
-    return $data;
-}
-
-sub GetComments {
-    my $self = shift;
-    my $id = shift;
-    my $api_class = "info/comments";
+    my $post = {@_};
     
     my $req = Proxer::API::Request->new(
         $self,
         class => $api_class,
-        data  => {id => $id},
+        data => $post
     );
+    
+    return $req->_perform;
+}
 
+sub GetComments {
+    my $self = shift;
+    my $api_class = "info/comments";
+    my $post = {@_};
+    
+    my $req = Proxer::API::Request->new(
+        $self,
+        class => $api_class,
+        data => $post
+    );
+    
     return $req->_perform;
 }
 
@@ -202,12 +196,12 @@ sub GetRelations {
     my $self = shift;
     my $api_class = "info/relations";
     
-    my $post = {@_};
+    my $id = shift;
     
     my $req = Proxer::API::Request->new(
         $self,
         class => $api_class,
-        data  => $post,
+        data  => {id => $id},
     );
 
     return $req->_perform;

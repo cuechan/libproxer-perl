@@ -91,6 +91,7 @@ sub _perform {
         $response->{code}    = 4000;
     }
     else {
+        $self->{RESPONSE_RAW} = $res->decoded_content;
         my $api = eval { decode_json( $res->decoded_content ) };
 
         unless ($api) {
@@ -115,7 +116,7 @@ sub failed {
     my $response = $self->{RESPONSE};
     
     if($response->{error} != 0) {
-        return 1;
+        return $response->{code} ? $response->{code} : 1;
     }
     else {
         return undef;
@@ -125,8 +126,15 @@ sub failed {
 sub data {
     my $self     = shift;
     my $response = $self->{RESPONSE};
-
-    return $response->{data};
+    
+    my $data = $response->{data};
+    
+    if(ref $data eq 'ARRAY') {
+        return @$data;
+    }
+    else {
+        return $data;
+    }
 }
 
 sub error {
@@ -134,4 +142,11 @@ sub error {
     my $response = $self->{RESPONSE};
     
     return $response->{message};
+}
+
+sub raw {
+    my $self = shift;
+    
+    my $rawdata = $self->{RESPONSE_RAW};
+    return $rawdata;
 }

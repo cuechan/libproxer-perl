@@ -46,7 +46,7 @@ our @EXPORT = qw(
 use lib '..';
 use Proxer::API::Request;
 use Carp;
-use JSON;
+use JSON::XS;
 use Data::Dumper;
 use utf8;
 
@@ -124,11 +124,8 @@ sub GetTopten {
 
 sub GetList {
     my $self = shift;
-    my $id = shift;
     my $post = {@_};
     my $api_class = 'user/list';
-    
-    _id_or_name(\$post, $id);
     
     my $res = Proxer::API::Request->new(
         $self,
@@ -142,10 +139,7 @@ sub GetList {
 sub GetLatestComment {
     my $self = shift;
     my $api_class = 'user/comments';
-    my $id = shift;
     my $post = {@_};
-    
-    _id_or_name(\$post, $id);
     
     my $res = Proxer::API::Request->new(
         $self,

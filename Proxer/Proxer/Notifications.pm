@@ -43,7 +43,7 @@ our @EXPORT = qw(
 use lib '..';
 use Proxer::API::Request;
 use Carp;
-use JSON;
+use JSON::XS;
 use Data::Dumper;
 use utf8;
 

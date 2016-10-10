@@ -116,12 +116,14 @@ sub new {
         $lwp->cookie_jar( {} );    # use temporary cookie jar
         $lwp->timeout(30);         # set timeout to 5 seconds
     }
+    
+    my $rawmode = $opt->{rawmode} ? 1 : undef;
 
     my $proxer = {
         BASE_URI => "https://proxer.me/api/v1/",
         API_KEY  => $api_key,
         LWP      => $lwp,
-        rawmode  => $opt->{rawmode} ? 1 : undef,
+        rawmode  => $rawmode
     };
 
     return bless( $proxer, $self );
