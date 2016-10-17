@@ -28,6 +28,9 @@
 #*************************************************************
 
 package Proxer::API::List;
+
+use lib '../..'; # only for development reason.
+
 use strict;
 use warnings;
 
@@ -41,112 +44,98 @@ our @EXPORT = qw(
   GetTags
 );
 
-use lib '..';
-use Proxer::API::Request;
+use Proxer::API::Access;
 use Carp;
 use Data::Dumper;
 
-###########################
-#                         #
-#         Methods         #
-#                         #
-###########################
 
-sub EntrySearch {
-    my $self      = shift;
-    my $api_class = 'list/entrysearch';
-    my $args      = {@_};
+=head1 Synopsis
 
-    my $search = {
-        name             => '',
-        language         => '',
-        type             => '',
-        genre            => [],
-        nogenre          => [],
-        fsk              => [],
-        sort             => '',
-        length           => '',
-        'length-linit'   => '',
-        tags             => [],
-        notags           => [],
-        tagratefilter    => '',
-        tagspoilerfilter => '',
-    };
+In-code documentations are strange... but i think otherwise i would forget to update the docs. So, lets start :D
 
-    # convert arrays to strings
-    my $post;
-    foreach ( keys %$args ) {
-        if ( ref( $args->{$_} ) eq 'ARRAY' ) {
-            $post->{$_} = join( '+', @{ $args->{$_} } );
-        }
-        else {
-            $post->{$_} = $args->{$_};
-        }
-    }
+    use Proxer::API::List;
+    
+    # preferred method:
+    $prxr_list = $prxr->List();
+    
+    # or:
+    $list_class = Proxer::API::List->new($existing_proxerAPI_object);
+    
+    $api_res = $prxr_list->GetListEntry();
+    $api_res = $prxr_list->EntrySearch("One Piece");
+    
+    # See Proxer::API for response methods
 
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => $post,
-    );
 
-    return $req->_perform;
+=head1 Construction
 
+Since C<Proxer::API> is holding our http related stuff we need an existing C<Proxer::API> object to create a new list object.
+
+    $prxr_list = $prxr->List();
+    
+or
+
+    $prxr_list = Proxer::API::List->new($prxr);
+
+The two variants are doing technically the same. Its up to which one you want to use.
+An other B<not recommended> way is this:
+
+    $res = $prxr->List->GetEntryList();
+
+This will work fine but it calls C<Proxer::API::List->new> every time you use it like this.
+Cause of performance reasons i recommend the first two variants.
+
+=cut
+
+
+sub new {
+    my $class = shift;
+    my $self->{Proxer_API} = shift;
+    
+    return bless($self, $class);
 }
+
+sub _proxer_api {
+    my $self = shift;
+    
+    return $self->{Proxer_API};
+}
+=head1 Methods
+
+Lot of usefull methods!
+
+=cut
+
+
+
+###################
+#                 #
+#     METHODS     #
+#                 #
+###################
+
+
+
+
+
+=head2 GetEntryList
+
+=cut
 
 sub GetEntryList {
     my $self      = shift;
     my $api_class = 'list/entrylist';
     my $post      = {@_};
 
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => $post,
+    return Proxer::API::Access->new(
+        Proxer_API  => $self->_proxer_api,
+        scrollable  => 1,
+        api_class   => $api_class,
+        post_data   => $post
     );
-    return $req->_perform;
 }
 
-sub GetTagIDs {
-    my $self      = shift;
-    my $api_class = 'list/tagids';
-    my $taglist   = shift;
 
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => { search => $taglist },
-    );
-
-    return $req->_perform;
-}
-
-sub GetTags {
-    my $self      = shift;
-    my $api_class = 'list/tags';
-    my $filter    = shift;
-
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => $filter,
-    );
-
-    return $req->_perform;
-}
-
-1;
-
-__DATA__
-
-Here is the Documentation:
-
-
-=head1 Name
-
-Proxer::List
-
-=head1 Methods
 
 =head2 EntrySearch
 
@@ -187,6 +176,90 @@ example for $filter:
 All options are equivalent to the options mentioned in the L<wiki|http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search>.
 
 L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search>
+
+=cut
+
+
+sub EntrySearch {
+    my $self      = shift;
+    my $api_class = 'list/entrysearch';
+    my $args      = {@_};
+
+    my $search = {
+        name             => '',
+        language         => '',
+        type             => '',
+        genre            => [],
+        nogenre          => [],
+        fsk              => [],
+        sort             => '',
+        length           => '',
+        'length-limit'   => '',
+        tags             => [],
+        notags           => [],
+        tagratefilter    => '',
+        tagspoilerfilter => '',
+    };
+
+    # convert arrays to strings
+    my $post;
+    foreach ( keys %$args ) {
+        if ( ref( $args->{$_} ) eq 'ARRAY' ) {
+            $post->{$_} = join( '+', @{ $args->{$_} } );
+        }
+        else {
+            $post->{$_} = $args->{$_};
+        }
+    }
+
+    my $req = Proxer::API::Access->new(
+        $self,
+        class => $api_class,
+        data  => $post,
+    );
+
+    return $req->_perform;
+
+}
+
+=head2 GetTagIDs
+
+=cut
+
+sub GetTagIDs {
+    my $self      = shift;
+    my $api_class = 'list/tagids';
+    my $taglist   = shift;
+
+    my $req = Proxer::API::Access->new(
+        $self,
+        class => $api_class,
+        data  => { search => $taglist },
+    );
+    
+    return $req->_perform;
+}
+
+sub GetTags {
+    my $self      = shift;
+    my $api_class = 'list/tags';
+    my $filter    = shift;
+
+    my $req = Proxer::API::Access->new(
+        $self,
+        class => $api_class,
+        data  => $filter,
+    );
+
+    return $req->_perform;
+}
+
+1;
+
+
+
+# Doc for the methods
+
 
 =head2 GetEntryList
 

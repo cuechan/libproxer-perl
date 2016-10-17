@@ -32,7 +32,7 @@ use strict;
 use warnings;
 
 require v5.6.0;
-our $VERSION = 0.01;
+our $VERSION = '0.01/dev';
 
 use Carp;
 use LWP;
@@ -50,37 +50,6 @@ use JSON::XS;
 # Todo: Function for postprocessing api answers
 # Todo: A lot of other stuff
 
-sub import {
-    my $module = shift;
-
-    # Unfortunately this need to be hardcoded
-    foreach (@_) {
-        if ( $_ eq 'Info' ) {
-            require Proxer::API::Info;
-            Proxer::API::Info->import();
-        }
-        elsif ( $_ eq 'Notifications' ) {
-            require Proxer::API::Notifications;
-            Proxer::API::Notifications->import();
-        }
-        elsif ( $_ eq 'List' ) {
-            require Proxer::API::List;
-            Proxer::API::List->import();
-        }
-        elsif ( $_ eq 'User' ) {
-            require Proxer::API::User;
-            Proxer::API::User->import();
-        }
-        elsif ( $_ eq 'Ucp' ) {
-            require Proxer::API::Ucp;
-            Proxer::API::Ucp->import();
-        }
-        else {
-            carp "$_ is not part of libproxer";
-        }
-
-    }
-}
 
 sub new {
     my $self = shift;
@@ -103,26 +72,23 @@ sub new {
         croak("No key defined");
         return undef;
     }
-
-    my $lwp;
+    
+    my $LWP;
     if ( $opt->{UserAgent} ) {
-        $lwp = $opt->{UserAgent};
+        $LWP = $opt->{UserAgent};
     }
     else {
-        $lwp = LWP::UserAgent->new();
+        $LWP = LWP::UserAgent->new();
 
-        $lwp->agent("libproxer2-perl/v$VERSION ($^O; perlv$])");
-        $lwp->cookie_jar( {} );    # use temporary cookie jar
-        $lwp->timeout(30);         # set timeout to 5 seconds
+        $LWP->agent("libproxer2-perl/v$VERSION ($^O; perlv$])");
+        $LWP->cookie_jar( {} );    # use temporary cookie jar
+        $LWP->timeout(30);         # set timeout to 5 seconds
     }
-    
-    my $rawmode = $opt->{rawmode} ? 1 : undef;
 
     my $proxer = {
         BASE_URI => "https://proxer.me/api/v1/",
         API_KEY  => $api_key,
-        LWP      => $lwp,
-        rawmode  => $rawmode
+        LWP      => $LWP,
     };
 
     return bless( $proxer, $self );
@@ -132,21 +98,6 @@ sub new {
 # PRIVATE FUNCTIONS #
 #####################
 
-sub _api_access {
-    my $self = shift;
-
-    my ( $api_class, $params ) = @_;
-
-    my $uri = $self->{BASE_URI} . $api_class;
-    $params->{api_key} = $self->{API_KEY};
-
-    warn "API-URL: ", $uri if $ENV{DEBUG};
-    warn "PARAMS: " . Dumper($params) if $ENV{DEBUG};
-
-    my $http_res = $self->{LWP}->post( $uri, $params );
-    
-    return $http_res;
-}
 
 sub _seterror {
     my $self = shift;
@@ -159,19 +110,42 @@ sub _seterror {
     return 1;
 }
 
+sub LWP {
+    my $self = shift;
+    
+    return $self->{LWP};
+}
+
+
+#######################
+#                     #
+#     CONSTRUCTOR     #
+#                     #
+#######################
+
+sub List {
+    my $self = shift;
+    
+    return Proxer::API::List->new($self);
+}
+
+sub Info {
+    my $self = shift;
+    
+    return Proxer::API::Info->new($self);
+}
+
+sub Notifications {
+    my $self = shift;
+    
+    return Proxer::API::Notifications->new($self);
+}
+
 ##########################
 #                        #
 #     PUBLIC METHODS     #
 #                        #
 ##########################
-
-sub rawmode {
-    my $self = shift;
-    my $mode = shift;
-    
-    $self->{rawmod} = $mode != 0 ? 1 : undef,
-}
-
 
 
 sub error {
@@ -180,6 +154,14 @@ sub error {
 
 }
 
+
+sub make_foo {
+    my $self = shift;
+    
+    $self->{foo} = 'bar';
+    
+    return 1;
+}
 1;    # End of Proxer
 
 __DATA__

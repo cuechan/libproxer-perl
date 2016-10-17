@@ -30,9 +30,9 @@
 package Proxer::API::Notifications;
 use strict;
 use warnings;
-
 require v5.6.0;
 our $VERSION = 0.01;
+
 use Exporter 'import';
 our @EXPORT = qw(
     Delete

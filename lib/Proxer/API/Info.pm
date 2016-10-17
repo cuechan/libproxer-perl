@@ -183,6 +183,8 @@ sub GetComments {
     my $api_class = "info/comments";
     my $post = {@_};
     
+    croak("No id given") unless $post->{id};
+    
     my $req = Proxer::API::Request->new(
         $self,
         class => $api_class,
