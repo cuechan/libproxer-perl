@@ -185,22 +185,6 @@ sub EntrySearch {
     my $api_class = 'list/entrysearch';
     my $args      = {@_};
 
-    my $search = {
-        name             => '',
-        language         => '',
-        type             => '',
-        genre            => [],
-        nogenre          => [],
-        fsk              => [],
-        sort             => '',
-        length           => '',
-        'length-limit'   => '',
-        tags             => [],
-        notags           => [],
-        tagratefilter    => '',
-        tagspoilerfilter => '',
-    };
-
     # convert arrays to strings
     my $post;
     foreach ( keys %$args ) {
@@ -211,18 +195,20 @@ sub EntrySearch {
             $post->{$_} = $args->{$_};
         }
     }
+    
 
-    my $req = Proxer::API::Access->new(
-        $self,
-        class => $api_class,
-        data  => $post,
+    return Proxer::API::Access->new(
+        Proxer_API  => $self->_proxer_api,
+        scrollable  => 1,
+        api_class   => $api_class,
+        post_data   => {type => 'all-manga', tags => 'neko'}
     );
-
-    return $req->_perform;
 
 }
 
 =head2 GetTagIDs
+
+    $prxrlist->GetTagIDs("a string with some tags");
 
 =cut
 
@@ -231,27 +217,34 @@ sub GetTagIDs {
     my $api_class = 'list/tagids';
     my $taglist   = shift;
 
-    my $req = Proxer::API::Access->new(
-        $self,
-        class => $api_class,
-        data  => { search => $taglist },
+    return Proxer::API::Access->new(
+        Proxer_API  => $self->_proxer_api,
+        scrollable  => 1,
+        api_class   => $api_class,
+        post_data   => {search => $taglist}
     );
-    
-    return $req->_perform;
 }
+
+=head2 GetTags
+
+    $prxrlist->GetTags(search => 'neko', sort => 'id');
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags>    
+
+=cut
+
 
 sub GetTags {
     my $self      = shift;
     my $api_class = 'list/tags';
-    my $filter    = shift;
+    my $post    = shift;
 
-    my $req = Proxer::API::Access->new(
-        $self,
-        class => $api_class,
-        data  => $filter,
+    return Proxer::API::Access->new(
+        Proxer_API  => $self->_proxer_api,
+        scrollable  => 1,
+        api_class   => $api_class,
+        post_data   => $post
     );
-
-    return $req->_perform;
 }
 
 1;

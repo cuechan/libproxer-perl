@@ -37,6 +37,9 @@ our $VERSION = '0.01/dev';
 use Carp;
 use LWP;
 use LWP::UserAgent;
+use HTTP::Headers;
+use HTTP::Request::Common;
+use HTTP::Response;
 use Data::Dumper;
 use JSON::XS;
 
@@ -73,20 +76,13 @@ sub new {
         return undef;
     }
     
-    my $LWP;
-    if ( $opt->{UserAgent} ) {
-        $LWP = $opt->{UserAgent};
-    }
-    else {
-        $LWP = LWP::UserAgent->new();
-
-        $LWP->agent("libproxer2-perl/v$VERSION ($^O; perlv$])");
-        $LWP->cookie_jar( {} );    # use temporary cookie jar
-        $LWP->timeout(30);         # set timeout to 5 seconds
-    }
+    my $LWP = LWP::UserAgent->new();
+    $LWP->agent("libproxer-perl/v0.01");
+    $LWP->cookie_jar({});
+    
 
     my $proxer = {
-        BASE_URI => "https://proxer.me/api/v1/",
+        BASE_URI => "http://proxer.me/api/v1/",
         API_KEY  => $api_key,
         LWP      => $LWP,
     };
@@ -108,6 +104,12 @@ sub _seterror {
 
     $self->{LAST_ERROR} = $message;
     return 1;
+}
+
+sub _http {
+    my $self = shift;
+    
+    return $self->LWP->request(shift);
 }
 
 sub LWP {
