@@ -54,16 +54,16 @@ use Data::Dumper;
 In-code documentations are strange... but i think otherwise i would forget to update the docs. So, lets start :D
 
     use Proxer::API::List;
-    
+
     # preferred method:
     $prxr_list = $prxr->List();
-    
+
     # or:
     $list_class = Proxer::API::List->new($existing_proxerAPI_object);
-    
+
     $api_res = $prxr_list->GetListEntry();
     $api_res = $prxr_list->EntrySearch("One Piece");
-    
+
     # See Proxer::API for response methods
 
 
@@ -72,7 +72,7 @@ In-code documentations are strange... but i think otherwise i would forget to up
 Since C<Proxer::API> is holding our http related stuff we need an existing C<Proxer::API> object to create a new list object.
 
     $prxr_list = $prxr->List();
-    
+
 or
 
     $prxr_list = Proxer::API::List->new($prxr);
@@ -91,13 +91,13 @@ Cause of performance reasons i recommend the first two variants.
 sub new {
     my $class = shift;
     my $self->{Proxer_API} = shift;
-    
+
     return bless($self, $class);
 }
 
 sub _proxer_api {
     my $self = shift;
-    
+
     return $self->{Proxer_API};
 }
 =head1 Methods
@@ -141,7 +141,7 @@ sub GetEntryList {
 
     $prxrlist->EntrySearch($filter, $page, $limit);
 
-example for $filter: 
+example for $filter:
 
     $filter = {
         name => 'Piece',
@@ -172,7 +172,7 @@ example for $filter:
             85
         ],
     }
-    
+
 All options are equivalent to the options mentioned in the L<wiki|http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search>.
 
 L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search>
@@ -186,22 +186,21 @@ sub EntrySearch {
     my $args      = {@_};
 
     # convert arrays to strings
-    my $post;
+    my %post;
     foreach ( keys %$args ) {
         if ( ref( $args->{$_} ) eq 'ARRAY' ) {
-            $post->{$_} = join( '+', @{ $args->{$_} } );
+            $post{$_} = join( '+', @{ $args->{$_} } );
         }
         else {
-            $post->{$_} = $args->{$_};
+            $post{$_} = $args->{$_};
         }
     }
     
-
     return Proxer::API::Access->new(
         Proxer_API  => $self->_proxer_api,
         scrollable  => 1,
         api_class   => $api_class,
-        post_data   => {type => 'all-manga', tags => 'neko'}
+        post_data   => [%post]
     );
 
 }
@@ -229,7 +228,7 @@ sub GetTagIDs {
 
     $prxrlist->GetTags(search => 'neko', sort => 'id');
 
-L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags>    
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags>
 
 =cut
 
