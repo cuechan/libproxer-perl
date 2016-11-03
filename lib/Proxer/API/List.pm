@@ -195,12 +195,12 @@ sub EntrySearch {
             $post{$_} = $args->{$_};
         }
     }
-    
+
     return Proxer::API::Access->new(
         Proxer_API  => $self->_proxer_api,
         scrollable  => 1,
         api_class   => $api_class,
-        post_data   => [%post]
+        post_data   => {%post}
     );
 
 }
