@@ -50,11 +50,27 @@ our @EXPORT = qw(
 );
 
 use lib '..';
-use Proxer::API::Request;
+use Proxer::API::Access;
 use Carp;
 use JSON::XS;
 use Data::Dumper;
 use utf8;
+
+
+
+
+sub new {
+    my $class = shift;
+    my $self->{Proxer_API} = shift;
+
+    return bless($self, $class);
+}
+
+sub _proxer_api {
+    my $self = shift;
+
+    return $self->{Proxer_API};
+}
 
 
 
@@ -68,176 +84,148 @@ sub GetEntry {
     my $self = shift;
     my $id   = shift;
     my $api_class  = "info/entry";
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data => {id => $id},
+
+    return Proxer::API::Access->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {id => $id},
     );
-    
-    $req->_perform(); #perform the request
-    
-    return $req;
 }
 
 sub GetNames {
     my $self = shift;
     my $id = shift;
     my $api_class = "info/names";
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => {id => $id},
-    );
 
-    return $req->_perform;
+    return Proxer::API::Access->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {id => $id},
+    );
 }
 
 sub GetGate {
     my $self = shift;
     my $id = shift;
     my $api_class = "info/gate";
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => {id => $id},
-    );
 
-    return $req->_perform
+    return Proxer::API::Request->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {id => $id}
+    );
 }
 
 sub GetLang {
     my $self = shift;
     my $id = shift;
     my $api_class = "info/lang";
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => {id => $id},
-    );
 
-    return $req->_perform;
+    return Proxer::API::Request->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {id => $id},
+    );
 }
 
 sub GetSeason {
     my $self = shift;
     my $id = shift;
     my $api_class = "info/season";
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => {id => $id},
-    );
 
-    return $req->_perform;
+    return Proxer::API::Request->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {id => $id},
+    );
 }
 
 sub GetGroups {
     my $self = shift;
     my $id = shift;
     my $api_class = "info/groups";
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => {id => $id},
-    );
 
-    return $req->_perform;
+    return Proxer::API::Request->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {id => $id},
+    );
 }
 
 sub GetPublisher {
     my $self = shift;
     my $id = shift;
     my $api_class = "info/publisher";
-    
-    my $req = Proxer::API::Request->new(
-        $self,
+
+    return Proxer::API::Request->new(
+        Proxer_API => $self->_proxer_api,
         class => $api_class,
         data  => {id => $id},
     );
-
-    return $req->_perform;
 }
 
 sub GetListinfo {
     my $self = shift;
     my $api_class = "info/listinfo";
     my $post = {@_};
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data => $post
+
+    return Proxer::API::Request->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => $post
     );
-    
-    return $req->_perform;
 }
 
 sub GetComments {
     my $self = shift;
     my $api_class = "info/comments";
     my $post = {@_};
-    
+
     croak("No id given") unless $post->{id};
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data => $post
+
+    return Proxer::API::Access->new(
+        Proxer_API => $self->_proxer_api,
+        api_class => $api_class,
+        post_data => $post
     );
-    
-    return $req->_perform;
 }
 
 sub GetRelations {
     my $self = shift;
-    my $api_class = "info/relations";
-    
     my $id = shift;
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => {id => $id},
-    );
+    my $api_class = "info/relations";
 
-    return $req->_perform;
+    return Proxer::API::Request->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {id => $id},
+    );
 }
 
 sub GetEntryTags {
     my $self = shift;
     my $id = shift;
     my $api_class = "info/entrytags";
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => {id => $id},
-    );
 
-    return $req->_perform;
+    return Proxer::API::Request->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {id => $id},
+    );
 }
 
 sub SetUserinfo {
     my $self = shift;
     my $id = shift;
-    my $api_class = "info/setuserinfo";
-    
     my $stat = shift; # note | favor | finish
-    
-    my $req = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data  => {id => $id, type => $stat},
-    );
+    my $api_class = "info/setuserinfo";
 
-    return $req->_perform
-    
+
+    return Proxer::API::Request->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {id => $id, type => $stat},
+    );
 }
 
 1;
@@ -282,7 +270,7 @@ Returns:
 
 =head2 GetNames
 
-Todo... 
+Todo...
 
     $prxrinfo->GetNames($id);
 
