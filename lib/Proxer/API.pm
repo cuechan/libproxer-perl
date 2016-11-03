@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 #*************************************************************
 # Copyright 2016 Paul Maruhn.
 #
@@ -75,11 +77,11 @@ sub new {
         croak("No key defined");
         return undef;
     }
-    
+
     my $LWP = LWP::UserAgent->new();
     $LWP->agent("libproxer-perl/v0.01");
     $LWP->cookie_jar({});
-    
+
 
     my $proxer = {
         BASE_URI => "http://proxer.me/api/v1/",
@@ -108,13 +110,13 @@ sub _seterror {
 
 sub _http {
     my $self = shift;
-    
+
     return $self->LWP->request(shift);
 }
 
 sub LWP {
     my $self = shift;
-    
+
     return $self->{LWP};
 }
 
@@ -127,19 +129,19 @@ sub LWP {
 
 sub List {
     my $self = shift;
-    
+
     return Proxer::API::List->new($self);
 }
 
 sub Info {
     my $self = shift;
-    
+
     return Proxer::API::Info->new($self);
 }
 
 sub Notifications {
     my $self = shift;
-    
+
     return Proxer::API::Notifications->new($self);
 }
 
@@ -159,12 +161,13 @@ sub error {
 
 sub make_foo {
     my $self = shift;
-    
+
     $self->{foo} = 'bar';
-    
+
     return 1;
 }
-1;    # End of Proxer
+
+1;    # End of Proxer::API
 
 __DATA__
 
@@ -177,7 +180,7 @@ Module for interaction with proxer.me;
 
 =head1 Synopsis
 
-todo: Synopsis 
+todo: Synopsis
 
 =head1 Functions
 
@@ -186,11 +189,11 @@ todo: Synopsis
 Create a proxer object
 
     my $prxr = Proxer->new(key => $api_key);
-    
+
 If you want to load the API-key from a file:
 
     my $prxr = Proxer->new(keyfile => 'path/to/api.key');
-    
+
 You also can load the key from a remote location using http or ftp:
 
     # NOT SUPPORTED YET!
