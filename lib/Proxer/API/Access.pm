@@ -47,17 +47,17 @@ use utf8;
 sub new {
     my $class = shift;
     my $self;
-    $self->{_parameters} = @_;
+    $self->{_params} = @_;
 
 
-    my $Proxer_API = {@_}->{Proxer_API};
-    my $api_class  = {@_}->{api_class};
+    my $Proxer_API = {@_}->{Proxer_API} or die "No proxer Object passed";
+    my $api_class  = {@_}->{api_class}  or die "No proxer api class passed";
     my $post_data  = {@_}->{post_data};
 
 
     # Download
     my $url = $Proxer_API->{BASE_URI}.$api_class;
-    warn $url;
+    # warn $url;
 
     my $http_header = HTTP::Headers->new();
 
@@ -65,16 +65,16 @@ sub new {
     $http_header->header('Accept' => '*/*');
     $http_header->header('Content-Type' => 'application/x-www-form-urlencoded');
 
-    my $payload = _to_url_econded_string(@$post_data);
-    warn $payload;
+    my $payload = _to_url_econded_string($post_data);
+    # warn $payload;
     my $http_req = HTTP::Request->new('POST', $url, $http_header, $payload);
 
 
-    warn Dumper $http_req;
+    # warn Dumper $http_req;
 
 
     my $http_res = $Proxer_API->LWP->request($http_req);
-    warn Dumper $http_res;
+    # warn Dumper $http_res;
     if( $http_res->is_error ) {
         $self->{is_error}  = 1;
         $self->{error_msg} = "Http-error";
@@ -145,11 +145,11 @@ sub raw {
 
 
 sub _to_url_econded_string {
-    my %data = @_;
+    my $data = shift;
     my @parameter;
 
-    foreach( keys %data ) {
-        push(@parameter, join('=', $_, $data{$_}));
+    foreach( keys %$data ) {
+        push(@parameter, join('=', $_, $data->{$_}));
     };
 
     my $url_string = join('&', @parameter);
