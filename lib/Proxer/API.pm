@@ -145,6 +145,12 @@ sub Notifications {
     return Proxer::API::Notifications->new($self);
 }
 
+sub User {
+    my $self = shift;
+
+    return Proxer::API::User->new($self);
+}
+
 ##########################
 #                        #
 #     PUBLIC METHODS     #

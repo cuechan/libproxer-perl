@@ -43,111 +43,109 @@ our @EXPORT = qw(
     GetLatestComment
 );
 
-use lib '..';
-use Proxer::API::Request;
+use lib '../..';
+use Proxer::API::Access;
 use Carp;
 use JSON::XS;
 use Data::Dumper;
 use utf8;
 
 
-###########################
-#                         #
-#         Methods         #
-#                         #
-###########################
+
+sub new {
+    my $class = shift;
+    my $self->{Proxer_API} = shift;
+
+    return bless($self, $class);
+}
+
+sub _proxer_api {
+    my $self = shift;
+
+    return $self->{Proxer_API};
+}
+
+
+###################
+#                 #
+#     METHODS     #
+#                 #
+###################
 
 sub Login {
     my $self = shift;
     my ($login, $password) = @_;
     my $api_class  = "user/login";
-    
-    my $res = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data => {
+
+    return Proxer::API::Access->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {
             username => $login,
             password => $password
         },
     );
-    
-    return $res->_perform;
 }
 
 sub Logout {
     my $self = shift;
     my $api_class  = "user/logout";
-    
+
     my $res = Proxer::API::Request->new(
         $self,
         class => $api_class,
     );
-    
+
     return $res->_perform;
 }
 
 sub Userinfo {
     my $self = shift;
-    my $id = shift;
+    my $uid = shift;
     my $api_class = 'user/userinfo';
-    my $post;
-    
-    _id_or_name(\$post, $id);
-    
-    my $res = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data => $post
+
+
+    return Proxer::API::Access->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {uid => $uid}
     );
-    
-    return $res->_perform;
 }
 
 sub GetTopten {
     my $self = shift;
     my $id = shift;
-    my $kat = shift;
     my $api_class = 'user/topten';
-    my $post;
-    
-    _id_or_name(\$post, $id);
-    $post->{kat} = $kat;
-    
-    my $res = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data => $post
+
+    return Proxer::API::Access->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {uid => $id}
     );
-    
-    return $res->_perform;
 }
 
 sub GetList {
     my $self = shift;
     my $post = {@_};
     my $api_class = 'user/list';
-    
-    my $res = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data => $post
+
+    return Proxer::API::Access->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => $post
     );
-    
-    return $res->_perform;
 }
 
 sub GetLatestComment {
     my $self = shift;
     my $api_class = 'user/comments';
     my $post = {@_};
-    
-    my $res = Proxer::API::Request->new(
-        $self,
-        class => $api_class,
-        data => $post
+
+    return Proxer::API::Access->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => $post
     );
-    
-    return $res->_perform;
 }
 
 
@@ -160,7 +158,7 @@ sub GetLatestComment {
 sub _id_or_name {
     my $ref = shift;
     my $id = shift;
-    
+
     if($id =~ m/^\d+$/) {
         delete $$ref->{username};
         delete $$ref->{id};
@@ -170,7 +168,7 @@ sub _id_or_name {
         delete $$ref->{id};
         $$ref->{username} = $id;
     }
-    
+
     return $$ref;
 }
 

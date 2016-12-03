@@ -80,6 +80,18 @@ sub _proxer_api {
 #                         #
 ###########################
 
+sub GetFullEntry {
+    my $self = shift;
+    my $id   = shift;
+    my $api_class  = "info/fullentry";
+
+    return Proxer::API::Access->new(
+        Proxer_API => $self->_proxer_api,
+        api_class  => $api_class,
+        post_data  => {id => $id},
+    );
+}
+
 sub GetEntry {
     my $self = shift;
     my $id   = shift;

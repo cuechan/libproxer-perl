@@ -50,8 +50,8 @@ sub new {
     $self->{_params} = @_;
 
 
-    my $Proxer_API = {@_}->{Proxer_API} or die "No proxer Object passed";
-    my $api_class  = {@_}->{api_class}  or die "No proxer api class passed";
+    my $Proxer_API = {@_}->{Proxer_API} or die "No proxer object passed";
+    my $api_class  = {@_}->{api_class}  or die "No api-class passed";
     my $post_data  = {@_}->{post_data};
 
 
@@ -106,7 +106,7 @@ sub failed {
         return 1;
     }
     else {
-        return undef;
+        return;
     }
 }
 
@@ -127,6 +127,12 @@ sub error {
     my $self = shift;
 
     return $self->{error_msg};
+}
+
+sub errcode {
+    my $self = shift;
+
+    return $self->{error};
 }
 
 sub raw {
