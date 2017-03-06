@@ -1,12 +1,12 @@
-# Name
+=pod
 
-Module for interaction with proxer.me;
+=head1 Module for interaction with proxer.me;
 
-# Synopsis
+=head1 Synopsis
 
-todo: Synopsis 
+todo: Synopsis
 
-# Functions
+=head1 Functions
 
 ## new
 
