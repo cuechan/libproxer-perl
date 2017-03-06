@@ -30,6 +30,7 @@
 package Proxer::API::Access;
 use strict;
 use warnings;
+use feature 'say';
 require v5.6.0;
 
 use Carp;
@@ -57,7 +58,6 @@ sub new {
 
     # Download
     my $url = $Proxer_API->{BASE_URI}.$api_class;
-    # warn $url;
 
     my $http_header = HTTP::Headers->new();
 
@@ -83,7 +83,15 @@ sub new {
     else {
         $self->{raw_res} = $http_res->decoded_content;
 
-        my $api_res = decode_json($self->{raw_res});
+        my $api_res = eval {
+            decode_json($self->{raw_res});
+        };
+        if ($@) {
+            warn "parsing json failed!";
+            print $self->{raw_res};
+            return;
+        }
+
         $self->{api_res} = $api_res;
 
         if( $api_res->{error} != 0 ) {
