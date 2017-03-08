@@ -11,12 +11,15 @@ todo: Synopsis
 ## new
 
 Create a proxer object
-    my $prxr = Proxer->new(key => $api\_key);
+
+    my $prxr = Proxer->new(key => $api_key);
 
 If you want to load the API-key from a file:
+
     my $prxr = Proxer->new(keyfile => 'path/to/api.key');
 
 You also can load the key from a remote location using http or ftp:
+
     # NOT SUPPORTED YET!
     #my $prxr = Proxer->new(keylocation => 'http://keys.proxer.me/mykey');
 
@@ -60,3 +63,31 @@ There will be some wrappers to make the usage of this lib easier.
 ### info\_get\_entry()
 
 [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Groups)
+
+### info\_get\_publisher
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#get_Publisher)
+
+### info\_get\_listinfo
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Listinfo)
+
+### info\_get\_comments
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Comments)
+
+### info\_get\_relations
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Relations)
+
+### info\_get\_entrytags
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Get_Entrytags)
+
+### info\_get\_listinfo
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/Info#Set_Userinfo)
+
+## User
+
+Stuff for user related things
