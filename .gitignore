@@ -1,9 +1,7 @@
-<<<<<<< HEAD
-*dev.pl # ignore files for local testing
+dev*    # ignore files for local testing
 *.key   # ignore files that probably containing api-keys
 dev/
 *.bak
-=======
 /blib/
 /.build/
 _build/
@@ -24,4 +22,3 @@ nytprof.out
 *.o
 *.bs
 /_eumm/
->>>>>>> github/master
