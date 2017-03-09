@@ -66,11 +66,6 @@ sub _proxer_api {
 }
 
 
-###################
-#                 #
-#     METHODS     #
-#                 #
-###################
 
 sub Login {
     my $self = shift;

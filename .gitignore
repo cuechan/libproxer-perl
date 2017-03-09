@@ -1,5 +1,6 @@
-dev*    # ignore files for local testing
-*.key   # ignore files that probably containing api-keys
+dev_*
+*.key
+*.tmp
 dev/
 *.bak
 /blib/
