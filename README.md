@@ -118,3 +118,37 @@ Stuff for user related things
 ### user\_get\_topten
 
 [Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/User#Get_Latest_Comment)
+
+## List
+
+Stuff for the `List` class
+
+## list\_entrysearch
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search)
+
+## list\_get\_entrylist
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search)
+
+## get\_tag\_ids
+
+    $prxrlist->GetTagIDs("a string with some tags");
+
+## get\_tags
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags)
+
+## get\_translatorgroups
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags)
+
+## get\_industrys
+actually it should be `industries`... however.
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags)
+
+## get\_translatorgroup\_projects
+actually it should be `industries`... however.
+
+[Proxer Wiki](http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags)
