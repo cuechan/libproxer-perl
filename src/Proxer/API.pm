@@ -448,15 +448,13 @@ sub user_userinfo {
 
 
 
-
-
 =head3 user_get_topten
 
 L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/User#Get_Topten>
 
 =cut
 
-sub user_gettopten {
+sub user_get_topten {
     my $self = shift;
     my $api_class = 'user/topten';
     my $post = {@_};
@@ -473,7 +471,7 @@ L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/User#Get_List>
 
 =cut
 
-sub user_getlist {
+sub user_get_list {
     my $self = shift;
     my $api_class = 'user/list';
     my $post = {@_};
@@ -500,6 +498,147 @@ sub user_get_latest_comment {
 
 
 
+#  _    ___ ___ _____
+# | |  |_ _/ __|_   _|
+# | |__ | |\__ \ | |
+# |____|___|___/ |_|
+#
+
+
+=head2 List
+
+Stuff for the C<List> class
+
+=cut
+
+
+
+=head2 list_entrysearch
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search>
+
+=cut
+
+
+sub list_entrysearch {
+    my $self      = shift;
+    my $api_class = 'list/entrysearch';
+    my $post = {@_};
+
+    return $self->_do_request($api_class, $post);
+}
+
+
+
+
+=head2 list_get_entrylist
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Entry_Search>
+
+=cut
+
+sub list_get_entrylist {
+    my $self      = shift;
+    my $api_class = 'list/entrylist';
+    my $post = {@_};
+
+    return $self->_do_request($api_class, $post);
+}
+
+
+
+=head2 get_tag_ids
+
+    $prxrlist->GetTagIDs("a string with some tags");
+
+=cut
+
+sub get_tag_ids {
+    my $self      = shift;
+    my $api_class = 'list/tagids';
+    my $tags = join ' ', @_;
+
+    return $self->_do_request($api_class, {search => $tags});
+}
+
+
+
+
+=head2 get_tags
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags>
+
+=cut
+
+
+sub GetTags {
+    my $self      = shift;
+    my $api_class = 'list/tags';
+    my $post = {@_};
+
+    return $self->_do_request($api_class, $post);
+}
+
+
+
+
+=head2 get_translatorgroups
+
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags>
+
+=cut
+
+
+sub get_translatorgroups {
+    my $self      = shift;
+    my $api_class = 'list/translatorgroups';
+    my $post = {@_};
+
+    return $self->_do_request($api_class, $post);
+}
+
+
+
+
+
+
+=head2 get_industrys
+actually it should be C<industries>... however.
+
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags>
+
+=cut
+
+
+sub get_industries {
+    my $self      = shift;
+    my $api_class = 'list/industrys';
+    my $post = {@_};
+
+    return $self->_do_request($api_class, $post);
+}
+
+
+
+
+=head2 get_translatorgroup_projects
+actually it should be C<industries>... however.
+
+
+L<Proxer Wiki|http://proxer.me/wiki/Proxer_API/v1/List#Get_Tags>
+
+=cut
+
+
+sub get_translatorgroup_projects {
+    my $self      = shift;
+    my $api_class = 'list/translatorgroupproject';
+    my $post = {@_};
+
+    return $self->_do_request($api_class, $post);
+}
 
 
 
